@@ -1,0 +1,812 @@
+<template>
+  <!--  TODO 网关记录：网关记录统计，包括功能有：-->
+  <!--  TODO 查询功能：按一天之内，一周之内，一个月之内，选定日期查询-->
+  <!--  TODO 导出功能：将所选记录进行导出-->
+
+  <div class="container" id="container" style="position: relative;height: 100%;width: 100%;scroll-behavior: auto;overflow: hidden;" >
+    <el-button id="fullbtn" @click="showFullScreen() " style="color:#fff;float: right;background-color: #09153D">全屏展示</el-button>
+    <!--  土壤氧化物环形图  v-show="!isthisFullScreen" -->
+    <div v-for="OxideId in OxideIds">
+      <Oxide  v-bind:OxideId="OxideId" v-bind:pieData="averageValue[OxideId]" v-bind:pie-name="OxideElement[OxideId]" v-bind:colors="['#00ffff', '#0A164F']" :style="{position:'absolute',height:'12.96%',width:'7.26%',left: 2.07+(OxideId%3)*10.89 +'%',top:'12.50%'}" v-if="OxideId < 3 && averageValue[OxideId] > 0 && refresh" :key="containerKey"></Oxide>
+      <Oxide  v-bind:OxideId="OxideId" v-bind:pieData="averageValue[OxideId]" v-bind:pie-name="OxideElement[OxideId]" v-bind:colors="['#00ffff', '#0A164F']" :style="{position:'absolute',height:'12.96%',width:'7.26%',left: 2.07+(OxideId%3)*10.89 +'%',top:'25.46%'}" v-if="OxideId >=3 && averageValue[OxideId] > 0 && refresh" :key="containerKey"></Oxide>
+    </div>
+    <!--  土壤元素柱状图-->
+<!--    <SoilElement v-bind:soil-entropy-info-value_20cm="soilEntropyInfoValue['20cm']"-->
+<!--                 v-bind:soil-entropy-info-value_40cm="soilEntropyInfoValue['40cm']"-->
+<!--                 v-bind:soil-entropy-info-value_60cm="soilEntropyInfoValue['60cm']"-->
+<!--                 v-bind:soil-entropy-info-value_80cm="soilEntropyInfoValue['80cm']"-->
+<!--                 v-bind:legend-list="legendTempList"-->
+<!--                 style="position:absolute;width:31.34%;height:28.42%;top:39.81%;left:0.67%" v-if="soilEntropyInfoValue['20cm'][0] && refresh" :key="containerKey">-->
+<!--    </SoilElement>-->
+    <div style="position:absolute;width:31.34%;height:28.42%;top:39.81%;left:0.67%;" v-if="soilEntropyInfoValue['20cm'][0] && refresh" :key="containerKey">
+      <div style="width: 100%;height:11%;margin: 0;padding: 0">
+
+      </div>
+      <div style="width: 100%;height:35%;margin: 0;padding: 0;">
+
+            <div style="width: 20%;height: 100%;margin: 0 5%;display: inline-block;position: relative;text-align: center">
+              <img src="../../../assets/sixedges.svg" style="height: 80%;">
+              <span style="color: #8EFCE8;position: absolute;left: 39%;top:30%">82</span>
+              <div style="width: 100%;height: 20%;margin: 0;padding: 0;top:-5%;position: relative">
+                <span style="color: #8EFCE8;font-size: 1.5vh">溯源节点数</span>
+              </div>
+            </div>
+        <div style="width: 20%;height: 100%;margin: 0 5%;display: inline-block;position: relative;text-align: center">
+          <img src="../../../assets/sixedges.svg" style="height: 80%;">
+          <span style="color: #8EFCE8;position: absolute;left: 30%;top:30%">1457</span>
+          <div style="width: 100%;height: 20%;margin: 0;padding: 0;top:-5%;position: relative">
+            <span style="color: #8EFCE8;font-size: 1.5vh">区块高度</span>
+          </div>
+        </div>
+        <div style="width: 20%;height: 100%;margin: 0 5%;display: inline-block;position: relative;text-align: center">
+          <img src="../../../assets/sixedges.svg" style="height: 80%;">
+          <span style="color: #8EFCE8;position: absolute;left: 25%;top:30%">43699</span>
+          <div style="width: 100%;height: 20%;margin: 0;padding: 0;top:-5%;position: relative">
+            <span style="color: #8EFCE8;font-size: 1.5vh">培育信息量</span>
+          </div>
+        </div>
+<!--            <img src="../../../assets/sixedges.svg" style="display:inline-block;height: 80%;max-width: 22%;margin:0 8%">-->
+<!--            <img src="../../../assets/sixedges.svg" style="display:inline-block;height: 80%;max-width: 22%;margin:0 8%">-->
+      </div>
+      <div style="width: 100%;height:42%;margin: 0;padding: 0;align-items: center">
+        <img src="../../../assets/LineImage.svg" style="width: 90%;height: 100%">
+      </div>
+      <div style="width: 100%;height:12%;margin: 0;padding: 0;">
+        <div style="width: 90%;height: 100%;margin: 0 auto;position: relative;text-align: left">
+          <div style="display:inline-block;width: 40%;height: 100%">
+            <img src="../../../assets/TracingDetail.svg" style="height: 70%;">
+            <span style="display:inline-block;color: #8EFCE8;font-size: 1.5vh;top: 0;position: absolute;margin: 0 1%">溯源详情</span>
+          </div>
+          <div style="display:inline-block;width: 25%;height: 100%;text-align: left">
+            <img src="../../../assets/black-point.svg" style="height: 50%;display:inline-block;top: -8%;position: relative;" >
+            <span style="display:inline-block;color: #8EFCE8;font-size: 1.5vh;top: 0;position: absolute;margin: 0 1%">新增溯源产品</span>
+          </div>
+          <div style="display:inline-block;width: 25%;height: 100%;text-align: left">
+            <img src="../../../assets/yellow-point.svg" style="height: 50%;display:inline-block;top: -8%;position: relative;">
+            <span style="display:inline-block;color: #8EFCE8;font-size: 1.5vh;top: 0;position: absolute;margin: 0 1%">溯源产品唤醒数</span>
+          </div>
+
+
+        </div>
+      </div>
+
+    </div>
+    <!--  价格趋势折线图-->
+    <Price style="position:absolute;width:31.34%;height:28.51%;top:69.44%;left:0.67%" v-if="refresh"></Price>
+    <!--  地图-->
+    <Map  v-if="refresh">
+      <!--    height="1080" width="1928"-->
+      <!--    <img src="../../../assets/bigScreenMap.png"  style="position:absolute;width:33.67%;height:50.83%;top:9.62%;left:33.26%;"/>-->
+    </Map>
+    <!--  仪表盘-->
+    <!--  <div :style="{position:'absolute',width:'1000px',height:'250px',top:'1150px',left:'1020px'}">-->
+    <DashBoard DashBoardId= "1" style="position: absolute; width: 18%;height: 32%;top: 58%;left: 32%;" v-if="refresh"></DashBoard>
+    <DashBoard DashBoardId= "2" style="position: absolute; width: 18%;height: 32%;top: 58%;left: 50%;" v-if="refresh"></DashBoard>
+    <DashBoard DashBoardId= "3" style="position: absolute; width: 18%;height: 32%;top: 75%;left: 32%;" v-if="refresh"></DashBoard>
+    <DashBoard DashBoardId= "4" style="position: absolute; width: 18%;height: 32%;top: 75%;left: 50%;" v-if="refresh"></DashBoard>
+
+
+    <!--  土壤张力-->
+    <SoilTension graphId= "1" style="position: absolute; width: 7.26%;height: 12.96%;top: 12.50%;left: 72.18%;" v-if="refresh"></SoilTension>
+    <SoilTension graphId= "2" style="position: absolute; width: 7.26%;height: 12.96%;top: 25.46%;left: 72.18%;" v-if="refresh"></SoilTension>
+    <SoilTension graphId= "3" style="position: absolute; width: 7.26%;height: 12.96%;top: 12.50%;left: 87.85%;" v-if="refresh"></SoilTension>
+    <SoilTension graphId= "4" style="position: absolute; width: 7.26%;height: 12.96%;top: 25.46%;left: 87.85%;" v-if="refresh"></SoilTension>
+    <!--  养护作业-->
+    <Maintenance style="position:absolute;width:31.39%;height:28.42%;top:39.81%;left:67.98%" v-if="refresh"></Maintenance>
+    <!--  浇灌作业
+    <Irrig style="position:absolute;width:31.39%;height:28.51%;top:69.44%;left:67.98%" v-if="refresh"></Irrig>-->
+    <Irrig style="position:absolute;width:50%;height:28.51%;top:69.44%;left:70.98%;" v-if="refresh"></Irrig>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div v-if="false">
+      <el-button id="fullbtn2" @click="showFullScreen()" style="color:#fff;float: right;background-color: #09153D">全屏展示</el-button>
+      <br>
+      <br>
+      <span style="font-size: 20px;color: #dfe4ed;fontFamily:'Microsoft yahei';margin-top: 10px">选择地块:  </span>
+      <el-select v-model="LotID" placeholder="选择地块"  style="width: 20%;background-color: #09153D;color:#FFF;">
+        <el-option v-for="item in getLotList(lotPathList)" :key="item.lotID" :label="item.lotName"
+                   :value="item.lotID" ></el-option>
+      </el-select>
+      <br>
+      <br>
+      <span style="font-size: 20px;color: #dfe4ed;fontFamily:'Microsoft yahei';margin-top: 10px;float: left;padding-left: 40px">土壤氧化物含量:  </span>
+      <br>
+      <br>
+      <div id="box1" class="pie" style="float:left;width: 13%;padding-left: 10px"></div>
+      <div id="box2" class="pie" style="float:left;width: 13%"></div>
+      <div id="box3" class="pie" style="float:left;width: 13%"></div>
+      <div id="box4" class="pie" style="float:left;width: 13%"></div>
+      <div id="box5" class="pie" style="float:left;width: 13%"></div>
+      <div id="box6" class="pie" style="float:left;width: 13%"></div>
+      <div id="box7" class="pie" style="float:left;width: 13%"></div>
+
+      <div id="bar_container" style="height: 4000px;width: 100%"></div>
+    </div>
+
+  </div>
+
+
+</template>
+
+<script>
+  import echarts from 'echarts'
+  import {mapState} from "vuex";
+  import Oxide from "./components/Oxide"
+  import Maintenance from "./components/Maintenance"
+  import Map from "./components/Map"
+  import Irrig from "./components/Irrig"
+  import Price from "./components/Price"
+  import SoilElement from "./components/SoilElement"
+  import SoilTension from "./components/SoilTension"
+  import DashBoard from "./components/DashBoard"
+
+
+  export default {
+    name: "BigScreen",
+    components: {
+      echarts,
+      Maintenance,
+      Map,
+      Irrig,
+      Oxide,
+      Price,
+      SoilElement,
+      SoilTension,
+      DashBoard
+
+    },
+    data() {
+      return {
+        //add
+        containerKey:1,
+        OxideIds:[0,1,2,3,4,5],
+        averageValue:[],
+        refresh:true,
+
+
+        locIDList: [],
+        sensorLocList: [],
+        sensorIDList: [],
+        sensorNameList: [],
+        LotID: 6,
+        saveLotID: 6,
+        LotList: [],
+        // 按传感器类型划分，列表中的每一个对象为echart中对应的值
+        hour: '',
+        legend_echarts:[],
+        data_echarts:[],
+        legendTempList:[],
+        soilEntropyInfoValue:{
+          '20cm':[],
+          '40cm':[],
+          '60cm':[],
+          '80cm':[],
+        },
+        soilOxideValue:{
+          'Si':[],
+          'Al':[],
+          'K':[],
+          'Mg':[],
+          'Ca':[],
+          'Na':[],
+          'Fe':[]
+        },
+        depthsoilOxideValue:{
+          '20cm':[],
+          '40cm':[],
+          '60cm':[],
+          '80cm':[],
+        },
+        OxideElement:['SiO2', 'Al2O3', 'K2O','MgO','CaO', 'Na2O','Fe2O3'],
+        boxes:['box1','box2','box3','box4','box5','box6','box7'],
+        isthisFullScreen: false,
+        MoiCap:{},
+        Moi845:{},
+        MoiTem1:{},
+        MoiTem2:{}
+
+      }
+    },
+    mounted() {
+      this.loadSoilEntropyInfo();
+    },
+    methods:{
+      loadSoilEntropyInfo() {
+        let param = {LotID: this.LotID};
+        this.$api.lot.findSoilEntropyByLotID(param).then((res) => {
+          // 根据不同土壤的测量深度进行划分
+
+          if(res.code === 200)
+          {
+            console.log("返回成功")
+            this.soilEntropyInfoValue["20cm"] = new Array();
+            this.soilEntropyInfoValue["40cm"] = new Array();
+            this.soilEntropyInfoValue["60cm"] = new Array();
+            this.soilEntropyInfoValue["80cm"] = new Array();
+
+            //depthsoilOxideValue
+            this.depthsoilOxideValue["20cm"] = new Array();
+            this.depthsoilOxideValue["40cm"] = new Array();
+            this.depthsoilOxideValue["60cm"] = new Array();
+            this.depthsoilOxideValue["80cm"] = new Array();
+
+            //res.data[i].soilEntropyInfo.splice(62,7)
+
+            let i = 0;
+            for(i=0;i<res.data.length;i++){
+
+              //获取氧化物数据
+              let OxiValue = res.data[i].soilEntropyInfo.slice(52,59)
+              console.log(OxiValue)
+              for(var oi=0;oi < OxiValue.length;oi++){
+                switch (res.data[i].sampleIdentification.substring(res.data[i].sampleIdentification.indexOf('c')-2)) {
+                  case '20cm':
+                    this.depthsoilOxideValue['20cm'].push(OxiValue[oi].elemValue)
+                    break;
+                  case '40cm':
+                    this.depthsoilOxideValue['40cm'].push(OxiValue[oi].elemValue)
+                    break;
+                  case '60cm':
+                    this.depthsoilOxideValue['60cm'].push(OxiValue[oi].elemValue)
+                    break;
+                  case '80cm':
+                    this.depthsoilOxideValue['80cm'].push(OxiValue[oi].elemValue)
+                    break;
+
+                }
+              }
+
+
+              //删除氧化物数据，以及一些 类似Fe-C数据
+
+
+
+              res.data[i].soilEntropyInfo.splice(52,18)
+              let soilEntropyInfo = res.data[i].soilEntropyInfo
+
+              //从小到大排序
+              let tempsoilEntropyInfoValue = [];
+
+              if (i === 0){
+                soilEntropyInfo.sort(function(a,b){
+                  return a.elemValue-b.elemValue});
+                this.legendTempList = [];
+              }else {
+
+                for (var ii = 0; ii< soilEntropyInfo.length;ii++){
+                  for (var jj =0;jj < soilEntropyInfo.length;jj++){
+                    if (soilEntropyInfo[jj].elemName === this.legendTempList[ii]){
+                      //console.log(this.legendTempList[ii])
+                      //console.log(soilEntropyInfo[jj].elemName)
+                      //console.log(soilEntropyInfo[jj].elemValue)
+                      if(soilEntropyInfo[jj].elemValue > 0){
+                        tempsoilEntropyInfoValue.push(soilEntropyInfo[jj].elemValue)
+                      }else{
+                        tempsoilEntropyInfoValue.push(0)
+                      }
+                      //tempsoilEntropyInfoValue.push(soilEntropyInfo[jj].elemValue>0?soilEntropyInfo[jj].elemValue>0:0)
+                      break
+                    }
+                  }
+                }
+
+              }
+
+              //获得legenddata
+
+              //soilEntropyInfo[soilEntropyInfo.length-1].elemValue = 900
+              for (let item in soilEntropyInfo) {
+                if(i === 0){
+                  this.legendTempList.push(soilEntropyInfo[item].elemName);
+
+                  if (soilEntropyInfo[item].elemValue < 0){
+                    soilEntropyInfo[item].elemValue = 0
+                  }
+                  tempsoilEntropyInfoValue.push(soilEntropyInfo[item].elemValue)
+                }
+              }
+
+              console.log(res.data[i].sampleIdentification.substring(res.data[i].sampleIdentification.indexOf('c')-2))
+
+              switch (res.data[i].sampleIdentification.substring(res.data[i].sampleIdentification.indexOf('c')-2)) {
+                case '20cm':
+                  this.soilEntropyInfoValue['20cm'].push(tempsoilEntropyInfoValue)
+                  break;
+                case '40cm':
+                  this.soilEntropyInfoValue['40cm'].push(tempsoilEntropyInfoValue)
+                  break;
+                case '60cm':
+                  this.soilEntropyInfoValue['60cm'].push(tempsoilEntropyInfoValue)
+                  break;
+                case '80cm':
+                  this.soilEntropyInfoValue['80cm'].push(tempsoilEntropyInfoValue)
+                  break;
+
+              }
+
+            }
+
+            //console.log("绘制条形图")
+            //legendTempList.push("SO<sub>2</sub>")
+            //soilEntropyInfoValue.push(100.2)
+            console.log("结果")
+            console.log(this.depthsoilOxideValue)
+            console.log(this.depthsoilOxideValue["20cm"][0])
+            console.log(this.depthsoilOxideValue["40cm"][0])
+            console.log(this.depthsoilOxideValue["60cm"][0])
+            console.log(this.depthsoilOxideValue["80cm"][0])
+
+            //edit!
+            //this.drawSoilPie(this.legendTempList);
+            //绘制环形图
+            this.drawCirclePie()
+
+
+          }else {
+            this.$message({message: '查询土壤微量元素数据失败 ', type: 'error'})
+          }
+
+        }).catch(function (res) {
+        })
+      },
+      drawCirclePie(){
+        for(var i=0;i<7;i++){
+          console.log("绘制环形图")
+          var averageValue = this.depthsoilOxideValue["20cm"][i] + this.depthsoilOxideValue["40cm"][i] + this.depthsoilOxideValue["60cm"][i] + this.depthsoilOxideValue["80cm"][i]
+          console.log(averageValue)
+          averageValue = averageValue / 4
+          console.log(averageValue)
+          averageValue = averageValue.toFixed(1)
+          console.log("平均值" + averageValue)
+          this.averageValue.push(averageValue)
+
+          /*edit!*/
+          //this.pie(averageValue, this.OxideElement[i], this.boxes[i], ['#00ffff', '#0A164F']);
+
+        }
+
+      },
+      toFixed:function (str,xlen){
+        //var a = str +"";
+        //return a.substring(0,str.indexOf(".") + xlen);
+        return str.toFixed(xlen)
+      },
+      drawSoilPie(legendData) {
+        var dom = document.getElementById("bar_container");
+        var myChartSoil = echarts.init(dom);
+
+        let option = {
+          title:{
+            text:'\n      土壤微量元素含量信息 (单位：ppm)',
+            textStyle:{
+              color:'#FFFFFF',        //颜色
+              fontStyle:'normal',     //风格
+              fontWeight:'normal',    //粗细
+              fontFamily:'Microsoft yahei',   //字体
+              fontSize:20,     //大小
+              align:'center',   //水平对齐
+              left: '50'
+            },
+          },
+          tooltip: {
+            trigger: 'axis',
+            axisPointer: {
+              type: 'shadow'
+            }
+          },
+          legend: {
+            data: ['土壤微量元素含量20厘米','土壤微量元素含量40厘米','土壤微量元素含量60厘米','土壤微量元素含量80厘米'],
+            textStyle:{//图例文字的样式
+              color:'#ccc',
+              fontSize:16
+            },
+            "itemGap": 30,
+            'itemWidth':40,
+            top: '60',
+            left:'100',
+            right:'30',
+            bottom:'30'
+          },
+          grid: {
+            left: '3%',
+            right: '4%',
+            bottom: '3%',
+            top: '3%',
+            containLabel: true
+          },
+          xAxis: {
+            type: 'value',
+            boundaryGap: [0, 0.01],
+            splitLine:{show: false},
+            axisLine: {
+              lineStyle: {
+                type: 'solid',
+                color: '#fff',//左边线的颜色
+                width:'2'//坐标线的宽度
+              }
+            },
+            axisLabel: {
+              textStyle: {
+                color: '#fff',//坐标值得具体的颜色
+
+              }
+            }
+          },
+          yAxis: {
+            type: 'category',
+            data: legendData,
+            axisLine: {
+              lineStyle: {
+                type: 'solid',
+                color: '#fff',//左边线的颜色
+                width:'2'//坐标线的宽度
+              }
+            },
+            axisLabel: {
+              textStyle: {
+                color: '#fff',//坐标值得具体的颜色
+
+              }
+            }
+          },
+          series: [
+            {
+              name: '土壤微量元素含量20厘米',
+              type: 'bar',
+              data: this.soilEntropyInfoValue["20cm"][0],
+              itemStyle:{
+                normal:{
+                  color:'#0566E8',
+                }
+              },
+              //markPoint : {
+              //  data : [
+              //    {type : 'max', name: '最大值'},
+              //    {type : 'min', name: '最小值'}
+              //  ]
+              //},
+              //markLine : {
+              // data : [
+              //   {type : 'average', name: '平均值'}
+              //]
+              //}
+            },
+            {
+              name: '土壤微量元素含量40厘米',
+              type: 'bar',
+              data: this.soilEntropyInfoValue["40cm"][0],
+              itemStyle:{
+                normal:{
+                  color:'#00ffff',
+                }
+              },
+              //markPoint : {
+              //  data : [
+              //    {type : 'max', name: '最大值'},
+              //    {type : 'min', name: '最小值'}
+              //  ]
+              //},
+              //markLine : {
+              // data : [
+              //   {type : 'average', name: '平均值'}
+              //]
+              //}
+            },
+            {
+              name: '土壤微量元素含量60厘米',
+              type: 'bar',
+              data: this.soilEntropyInfoValue["60cm"][0],
+              itemStyle:{
+                normal:{
+                  color:'#ffff00',
+                }
+              },
+              //markPoint : {
+              //  data : [
+              //    {type : 'max', name: '最大值'},
+              //    {type : 'min', name: '最小值'}
+              //  ]
+              //},
+              //markLine : {
+              // data : [
+              //   {type : 'average', name: '平均值'}
+              //]
+              //}
+            },
+            {
+              name: '土壤微量元素含量80厘米',
+              type: 'bar',
+              data: this.soilEntropyInfoValue["80cm"][0],
+              itemStyle:{
+                normal:{
+                  color:'#ff0066',
+                }
+              },
+              //markPoint : {
+              //  data : [
+              //    {type : 'max', name: '最大值'},
+              //    {type : 'min', name: '最小值'}
+              //  ]
+              //},
+              //markLine : {
+              // data : [
+              //   {type : 'average', name: '平均值'}
+              //]
+              //}
+            }
+          ]
+        };
+        myChartSoil.setOption(option,true);
+      },
+      getLotList(lotPathList) {
+        if(lotPathList === undefined){
+          console.log("还未加载数据")
+        }
+        let LotList = []
+        for (let i = 0; i < lotPathList.length; i++) {
+          LotList.push({
+            lotID: lotPathList[i].id,
+            lotName: lotPathList[i].name
+          })
+        }
+        return LotList
+      },
+      pie: function(pieData, pieName, box, colors ){
+        const that = this;
+        var dom = document.getElementById(box);
+        var myChart = echarts.init(dom);
+
+        const data = pieData;
+        const name = pieName;
+        const option = {
+          grid: {
+            top: 5,
+            bottom: 5,
+          },
+          color: colors,
+          series: [{
+            name: 'valueOfMarket',
+            type: 'pie',
+            center: ['50%', '50%'], // 饼图的圆心坐标
+            radius: ['60%', '75%'],
+            avoidLabelOverlap: false,
+            hoverAnimation: false,
+            label: { //  饼图图形上的文本标签
+              normal: { // normal 是图形在默认状态下的样式
+                show: true,
+                position: 'center',
+                color: '#FFFFFF',
+                fontSize: 14,
+                fontWeight: 'bold',
+                formatter: '{b}\n\n{c}%' // {b}:数据名； {c}：数据值； {d}：百分比
+              }
+            },
+            data: [
+              {
+                value: data,
+                name: name,
+                label: {
+                  normal: {
+                    show: true
+                  }
+                }
+
+              },
+              {
+                value: 100 - data,
+                name: '',
+                label: {
+                  normal: {
+                    show: false
+                  }
+                }
+              }
+            ]
+          }]
+        }
+        myChart.setOption(option,true);
+        myChart.dispatchAction({
+          type: 'highlight',
+          seriesIndex: 0,
+          dataIndex: 1
+        });
+
+      },
+      launchIntoFullscreen: function(element) {
+        if(element.requestFullscreen){
+          element.requestFullscreen();
+        }
+        else if(element.mozRequestFullScreen) {
+          element.mozRequestFullScreen();
+        }
+        else if(element.webkitRequestFullscreen) {
+          element.webkitRequestFullscreen();
+        }
+        else if(element.msRequestFullscreen) {
+          element.msRequestFullscreen();
+        }
+      },
+      exitFullscreen: function() {
+        if(document.exitFullscreen) {
+          document.exitFullscreen();
+        } else if(document.mozCancelFullScreen) {
+          document.mozCancelFullScreen();
+        } else if(document.webkitExitFullscreen) {
+          document.webkitExitFullscreen();
+        }
+      },
+      showFullScreen(){
+        var fullscreen = document.getElementById("container");
+
+        var fullbtn = document.getElementById("fullbtn");
+        const  that = this
+        if(this.isthisFullScreen === false){
+          this.launchIntoFullscreen(fullscreen)
+          this.isthisFullScreen = true;
+          fullbtn.innerHTML = "退出全屏"
+          this.$nextTick(()=>{
+            this.containerKey = new Date().getTime()
+            this.refresh = false
+            setInterval(function ()
+            {that.refresh = true},1500)
+          })
+
+          this.showAnimation(true)
+
+        }else{
+          this.isthisFullScreen = false;
+          this.exitFullscreen()
+          this.$nextTick(()=>{
+            this.containerKey = new Date().getTime()
+            this.refresh = false
+            setInterval(function ()
+            {that.refresh = true},1500)
+          })
+
+          fullbtn.innerHTML = "全屏展示"
+          this.showAnimation(false)
+          this.containerKey = new Date().getTime()
+
+        }
+
+      },
+
+      ctrlFullScreen(){
+        var element = document.getElementById("container");
+
+        var fullbtn = document.getElementById("fullbtn");
+
+        if (element.requestFullScreen)
+          return element.requestFullScreen();
+        if (element.webkitRequestFullScreen)
+          return element.webkitRequestFullScreen();
+        if (element.mozRequestFullScreen)
+          return element.mozRequestFullScreen();
+        if (element.msRequestFullScreen)
+          return element.msRequestFullScreen();
+        if (element.oRequestFullScreen)
+          return element.oRequestFullScreen();
+
+        if(this.isthisFullScreen === false){
+          this.launchIntoFullscreen(fullscreen)
+          this.isthisFullScreen = true;
+          fullbtn.innerHTML = "退出全屏"
+          fullbtn.visible = false;
+          //this.showAnimation(true)
+        }else{
+          this.isthisFullScreen = false;
+          this.exitFullscreen()
+          fullbtn.innerHTML = "全屏展示"
+          fullbtn.visible = true;
+          //this.showAnimation(false)
+        }
+
+      },
+
+
+
+      thisshowFullScreen: function () {
+        if (this.isthisFullScreen === false){
+          this.isthisFullScreen = true
+          var el = document.getElementById("container");
+          var rfs = el.requestFullScreen || el.webkitRequestFullScreen || el.mozRequestFullScreen || el.msRequestFullscreen;
+          if(typeof rfs != "undefined" && rfs) {
+            rfs.call(el);
+          };
+        }
+        else {
+          this.isthisFullScreen = false
+          if (document.exitFullscreen) {
+            document.exitFullscreen();
+          }
+          else if (document.mozCancelFullScreen) {
+            document.mozCancelFullScreen();
+          }
+          else if (document.webkitCancelFullScreen) {
+            document.webkitCancelFullScreen();
+          }
+          else if (document.msExitFullscreen) {
+            document.msExitFullscreen();
+          }
+          if(typeof cfs != "undefined" && cfs) {
+            cfs.call(el);
+          }
+        }
+      },
+      showAnimation(start){
+        // 定时获取传感器参数
+        if(start === true){
+          this.saveLotID = this.LotID;
+
+          this.timer = setInterval(() => {
+            this.LotID = this.randomNum(3,12)
+            this.loadSoilEntropyInfo();
+          }, 5 * 1000)
+        }
+        else{
+          this.LotID = this.saveLotID;
+          clearInterval(this.timer);
+        }
+      },
+      //生成从minNum到maxNum的随机数
+      randomNum: function(minNum,maxNum){
+        switch(arguments.length){
+          case 1:
+            return parseInt(Math.random()*minNum+1,10);
+            break;
+          case 2:
+            return parseInt(Math.random()*(maxNum-minNum+1)+minNum,10);
+            break;
+          default:
+            return 0;
+            break;
+        }
+      }
+
+    },
+    watch: {
+      'LotID': {
+        handler(newVal, oldVal) {
+          console.error(newVal + ' ' + oldVal)
+          if (newVal !== oldVal) {
+            //
+            this.loadSoilEntropyInfo()
+          }
+        }
+      }
+    },
+    computed: {
+      ...mapState({
+        lotPathList: state => state.lot.allLotLocList
+      }),
+    }
+  }
+</script>
+
+<style scoped>
+  .pie {
+    width:160px;
+    height:160px;
+    margin: 0 auto;
+  }
+  /*隐藏div的滚动条*/
+  .container::-webkit-scrollbar {display:none}
+  #container{
+    background:url(../../../assets/backgroundImg.jpeg) left top no-repeat;
+    background-size: 100% 100%;
+  }
+</style>
