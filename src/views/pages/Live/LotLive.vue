@@ -309,7 +309,7 @@
             })
           }
         }).catch(function (res) {
-          console.log(res)
+          // console.log(res)
         })
       },
       clearSensorGbyType(){
@@ -537,10 +537,10 @@
 
 
         if (this.sensorGbyType.ST24.length <= 0){
-          console.log("温度数据为空")
+          // console.log("温度数据为空")
           return;
         }
-        console.log("绘制温度曲线")
+        // console.log("绘制温度曲线")
         let myChart24 = echarts.init(document.getElementById('ST24'));
         let option24 = {
           tooltip: {

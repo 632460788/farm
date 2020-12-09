@@ -330,9 +330,9 @@
 
         // 遍历返回数据，为每一个传感器 生成一个数据列表，时间，传感器值
 
-        console.log("数据整理结果")
-        console.log(this.legend_echarts)
-        console.log(this.data_echarts)
+        // console.log("数据整理结果")
+        // console.log(this.legend_echarts)
+        // console.log(this.data_echarts)
 
 
       },

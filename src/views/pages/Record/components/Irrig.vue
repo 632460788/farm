@@ -55,7 +55,6 @@
                 temp_date = tempArray[i].date
               }
             }
-
             for (let i = 0; i < this.dates.length; i++) {
               graphData.push([new_dates[i], new_stere[i]])
             }

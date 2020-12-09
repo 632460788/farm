@@ -238,8 +238,8 @@
             }
           }
           //params:{'LotID':{1,2}}
-          console.log("params")
-          console.log(params)
+          // console.log("params")
+          // console.log(params)
           this.$api.irrigation.findPageByDate(params).then((res) => {
 
             if (res.code === 400 || res.data === undefined){
@@ -251,9 +251,9 @@
               res.data.totalSize = res.data.content.length
               //this.nameList = this.getNameList(res.data);
               let lotList = this.getLotList(this.lotPathList);
-              console.log("lotList")
-              console.log(lotList)
-              console.log(res.data)
+              // console.log("lotList")
+              // console.log(lotList)
+              // console.log(res.data)
               // for(var i=0;i<res.data.totalSize;i++){
               //   res.data.content[i].lotName = lotList[res.data.content[i].regionId-1].lotName
               //   res.data.content[i].LotID = res.data.content[i].regionId
@@ -275,8 +275,8 @@
 
 
               this.pageResult = res.data
-              console.log("user")
-              console.log(this.pageResult)
+              // console.log("user")
+              // console.log(this.pageResult)
             }
 
           })
@@ -319,9 +319,9 @@
           res.data.totalSize = res.data.content.length
           //this.nameList = this.getNameList(res.data);
           let lotList = this.getLotList(this.lotPathList);
-          console.log("lotList")
-          console.log(lotList)
-          console.log(res.data)
+          // console.log("lotList")
+          // console.log(lotList)
+          // console.log(res.data)
 
           // alert(JSON.stringify(res.data))
           for(var i=0;i<res.data.totalSize;i++){
@@ -339,8 +339,8 @@
             res.data.content[i].LotID = res.data.content[i].regionId
           }
           this.pageResult = res.data
-          console.log("user")
-          console.log(this.pageResult)
+          // console.log("user")
+          // console.log(this.pageResult)
 
         }).then(data != null ? data.callback : '')
 
@@ -350,13 +350,13 @@
       // 批量删除
       handleDelete: function (data) {
 
-        console.log(data.params)
+        // console.log(data.params)
         let id = []
         for (var i =0;i<data.params.length;i++){
           id.push(data.params[i].id)
         }
         let param = {id: id};
-        console.log(param)
+        // console.log(param)
         try{
           this.$api.irrigation.batchDelete(param).then(data !== null ? data.callback : '')
 
@@ -391,7 +391,7 @@
         this.operation = false
         //params.row.datetime2 = params.row.datetime1 + " " + params.row.datetime2
         this.dataForm = Object.assign({}, params.row)
-        console.log(this.dataForm)
+        // console.log(this.dataForm)
         this.dataForm.datetime2 = params.row.datetime1 + " " + params.row.datetime2
         this.dataForm.IsAdd = false
         //element多选下拉框回显数据时只显示value，此处将id用地块名表示，编辑时进行转换
@@ -400,7 +400,7 @@
 
         this.dataForm.LotID = this.dataForm.lotName.split(',')
 
-        console.log(this.lotMap)
+        // console.log(this.lotMap)
         delete this.dataForm.lotName
         delete this.dataForm.regionId
 
@@ -424,8 +424,8 @@
               }
               let params = Object.assign({}, this.dataForm)
               params.LotID = lotID
-              console.log("编辑")
-              console.log(params)
+              // console.log("编辑")
+              // console.log(params)
 
               if (this.dataForm.datetime1 instanceof Date){
                 params.datetime1 = this.getFormatDate(this.dataForm.datetime1);
@@ -436,8 +436,8 @@
                 params.datetime2 = params.datetime2.substr(params.datetime2.indexOf(" ")+1,8)
               }
 
-              console.log("编辑")
-              console.log(params)
+              // console.log("编辑")
+              // console.log(params)
 
               this.$api.irrigation.save(params).then((res) => {
                 this.editLoading = false

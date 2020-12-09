@@ -49,7 +49,7 @@
     methods: {
       loadDeviceRelation() {
 
-        console.log("请求拓扑数据")
+        // console.log("请求拓扑数据")
         this.$api.device.getDeviceTopo(null).then((res) => {
           if (res.code === 200) {
             //this.deviceGraph.hideLoading()

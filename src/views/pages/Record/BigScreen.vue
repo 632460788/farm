@@ -3,7 +3,7 @@
   <!--  TODO 查询功能：按一天之内，一周之内，一个月之内，选定日期查询-->
   <!--  TODO 导出功能：将所选记录进行导出-->
 
-  <div class="container" id="container" style="position: relative;height: 100%;width: 100%;scroll-behavior: auto;overflow: hidden;" >
+  <div class="container" id="container" style="position: relative;scroll-behavior: auto;overflow: hidden;" >
     <el-button id="fullbtn" @click="showFullScreen() " style="color:#fff;float: right;background-color: #09153D">全屏展示</el-button>
     <!--  土壤氧化物环形图  v-show="!isthisFullScreen" -->
     <div v-for="OxideId in OxideIds">
@@ -11,73 +11,69 @@
       <Oxide  v-bind:OxideId="OxideId" v-bind:pieData="averageValue[OxideId]" v-bind:pie-name="OxideElement[OxideId]" v-bind:colors="['#00ffff', '#0A164F']" :style="{position:'absolute',height:'12.96%',width:'7.26%',left: 2.07+(OxideId%3)*10.89 +'%',top:'25.46%'}" v-if="OxideId >=3 && averageValue[OxideId] > 0 && refresh" :key="containerKey"></Oxide>
     </div>
     <!--  土壤元素柱状图-->
-<!--    <SoilElement v-bind:soil-entropy-info-value_20cm="soilEntropyInfoValue['20cm']"-->
-<!--                 v-bind:soil-entropy-info-value_40cm="soilEntropyInfoValue['40cm']"-->
-<!--                 v-bind:soil-entropy-info-value_60cm="soilEntropyInfoValue['60cm']"-->
-<!--                 v-bind:soil-entropy-info-value_80cm="soilEntropyInfoValue['80cm']"-->
-<!--                 v-bind:legend-list="legendTempList"-->
-<!--                 style="position:absolute;width:31.34%;height:28.42%;top:39.81%;left:0.67%" v-if="soilEntropyInfoValue['20cm'][0] && refresh" :key="containerKey">-->
-<!--    </SoilElement>-->
-    <div style="position:absolute;width:31.34%;height:28.42%;top:39.81%;left:0.67%;" v-if="soilEntropyInfoValue['20cm'][0] && refresh" :key="containerKey">
-      <div style="width: 100%;height:11%;margin: 0;padding: 0">
+    <new-soil-element
+      style="position:absolute;width:31.34%;height:40%;top:39.81%;left:0.67%" v-if="refresh" :key="containerKey">
+    </new-soil-element>
+    <!--    <new-soil-element-->
+    <!--                 style="position:absolute;width:31.34%;height:28.42%;top:39.81%;left:0.67%" v-if="refresh" :key="containerKey">-->
+    <!--    </new-soil-element>-->
+    <!--    <div style="position:absolute;width:31.34%;height:28.42%;top:39.81%;left:0.67%;" v-if="soilEntropyInfoValue['20cm'][0] && refresh" :key="containerKey">-->
+    <!--      <div style="width: 100%;height:11%;margin: 0;padding: 0">-->
 
-      </div>
-      <div style="width: 100%;height:35%;margin: 0;padding: 0;">
+    <!--      </div>-->
+    <!--      <div style="width: 100%;height:35%;margin: 0;padding: 0;">-->
 
-            <div style="width: 20%;height: 100%;margin: 0 5%;display: inline-block;position: relative;text-align: center">
-              <img src="../../../assets/sixedges.svg" style="height: 80%;">
-              <span style="color: #8EFCE8;position: absolute;left: 39%;top:30%">82</span>
-              <div style="width: 100%;height: 20%;margin: 0;padding: 0;top:-5%;position: relative">
-                <span style="color: #8EFCE8;font-size: 1.5vh">溯源节点数</span>
-              </div>
-            </div>
-        <div style="width: 20%;height: 100%;margin: 0 5%;display: inline-block;position: relative;text-align: center">
-          <img src="../../../assets/sixedges.svg" style="height: 80%;">
-          <span style="color: #8EFCE8;position: absolute;left: 30%;top:30%">1457</span>
-          <div style="width: 100%;height: 20%;margin: 0;padding: 0;top:-5%;position: relative">
-            <span style="color: #8EFCE8;font-size: 1.5vh">区块高度</span>
-          </div>
-        </div>
-        <div style="width: 20%;height: 100%;margin: 0 5%;display: inline-block;position: relative;text-align: center">
-          <img src="../../../assets/sixedges.svg" style="height: 80%;">
-          <span style="color: #8EFCE8;position: absolute;left: 25%;top:30%">43699</span>
-          <div style="width: 100%;height: 20%;margin: 0;padding: 0;top:-5%;position: relative">
-            <span style="color: #8EFCE8;font-size: 1.5vh">培育信息量</span>
-          </div>
-        </div>
-<!--            <img src="../../../assets/sixedges.svg" style="display:inline-block;height: 80%;max-width: 22%;margin:0 8%">-->
-<!--            <img src="../../../assets/sixedges.svg" style="display:inline-block;height: 80%;max-width: 22%;margin:0 8%">-->
-      </div>
-      <div style="width: 100%;height:42%;margin: 0;padding: 0;align-items: center">
-        <img src="../../../assets/LineImage.svg" style="width: 90%;height: 100%">
-      </div>
-      <div style="width: 100%;height:12%;margin: 0;padding: 0;">
-        <div style="width: 90%;height: 100%;margin: 0 auto;position: relative;text-align: left">
-          <div style="display:inline-block;width: 40%;height: 100%">
-            <img src="../../../assets/TracingDetail.svg" style="height: 70%;">
-            <span style="display:inline-block;color: #8EFCE8;font-size: 1.5vh;top: 0;position: absolute;margin: 0 1%">溯源详情</span>
-          </div>
-          <div style="display:inline-block;width: 25%;height: 100%;text-align: left">
-            <img src="../../../assets/black-point.svg" style="height: 50%;display:inline-block;top: -8%;position: relative;" >
-            <span style="display:inline-block;color: #8EFCE8;font-size: 1.5vh;top: 0;position: absolute;margin: 0 1%">新增溯源产品</span>
-          </div>
-          <div style="display:inline-block;width: 25%;height: 100%;text-align: left">
-            <img src="../../../assets/yellow-point.svg" style="height: 50%;display:inline-block;top: -8%;position: relative;">
-            <span style="display:inline-block;color: #8EFCE8;font-size: 1.5vh;top: 0;position: absolute;margin: 0 1%">溯源产品唤醒数</span>
-          </div>
+    <!--            <div style="width: 20%;height: 100%;margin: 0 5%;display: inline-block;position: relative;text-align: center">-->
+    <!--              <img src="../../../assets/sixedges.svg" style="height: 80%;">-->
+    <!--              <span style="color: #8EFCE8;position: absolute;left: 39%;top:30%">82</span>-->
+    <!--              <div style="width: 100%;height: 20%;margin: 0;padding: 0;top:-5%;position: relative">-->
+    <!--                <span style="color: #8EFCE8;font-size: 1.5vh">溯源节点数</span>-->
+    <!--              </div>-->
+    <!--            </div>-->
+    <!--        <div style="width: 20%;height: 100%;margin: 0 5%;display: inline-block;position: relative;text-align: center">-->
+    <!--          <img src="../../../assets/sixedges.svg" style="height: 80%;">-->
+    <!--          <span style="color: #8EFCE8;position: absolute;left: 30%;top:30%">1457</span>-->
+    <!--          <div style="width: 100%;height: 20%;margin: 0;padding: 0;top:-5%;position: relative">-->
+    <!--            <span style="color: #8EFCE8;font-size: 1.5vh">区块高度</span>-->
+    <!--          </div>-->
+    <!--        </div>-->
+    <!--        <div style="width: 20%;height: 100%;margin: 0 5%;display: inline-block;position: relative;text-align: center">-->
+    <!--          <img src="../../../assets/sixedges.svg" style="height: 80%;">-->
+    <!--          <span style="color: #8EFCE8;position: absolute;left: 25%;top:30%">43699</span>-->
+    <!--          <div style="width: 100%;height: 20%;margin: 0;padding: 0;top:-5%;position: relative">-->
+    <!--            <span style="color: #8EFCE8;font-size: 1.5vh">培育信息量</span>-->
+    <!--          </div>-->
+    <!--        </div>-->
+    <!--&lt;!&ndash;            <img src="../../../assets/sixedges.svg" style="display:inline-block;height: 80%;max-width: 22%;margin:0 8%">&ndash;&gt;-->
+    <!--&lt;!&ndash;            <img src="../../../assets/sixedges.svg" style="display:inline-block;height: 80%;max-width: 22%;margin:0 8%">&ndash;&gt;-->
+    <!--      </div>-->
+    <!--      <div style="width: 100%;height:42%;margin: 0;padding: 0;align-items: center">-->
+    <!--        <img src="../../../assets/LineImage.svg" style="width: 90%;height: 100%">-->
+    <!--      </div>-->
+    <!--      <div style="width: 100%;height:12%;margin: 0;padding: 0;">-->
+    <!--        <div style="width: 90%;height: 100%;margin: 0 auto;position: relative;text-align: left">-->
+    <!--          <div style="display:inline-block;width: 40%;height: 100%">-->
+    <!--            <img src="../../../assets/TracingDetail.svg" style="height: 70%;">-->
+    <!--            <span style="display:inline-block;color: #8EFCE8;font-size: 1.5vh;top: 0;position: absolute;margin: 0 1%">溯源详情</span>-->
+    <!--          </div>-->
+    <!--          <div style="display:inline-block;width: 25%;height: 100%;text-align: left">-->
+    <!--            <img src="../../../assets/black-point.svg" style="height: 50%;display:inline-block;top: -8%;position: relative;" >-->
+    <!--            <span style="display:inline-block;color: #8EFCE8;font-size: 1.5vh;top: 0;position: absolute;margin: 0 1%">新增溯源产品</span>-->
+    <!--          </div>-->
+    <!--          <div style="display:inline-block;width: 25%;height: 100%;text-align: left">-->
+    <!--            <img src="../../../assets/yellow-point.svg" style="height: 50%;display:inline-block;top: -8%;position: relative;">-->
+    <!--            <span style="display:inline-block;color: #8EFCE8;font-size: 1.5vh;top: 0;position: absolute;margin: 0 1%">溯源产品唤醒数</span>-->
+    <!--          </div>-->
 
 
-        </div>
-      </div>
+    <!--        </div>-->
+    <!--      </div>-->
 
-    </div>
+    <!--    </div>-->
     <!--  价格趋势折线图-->
     <Price style="position:absolute;width:31.34%;height:28.51%;top:69.44%;left:0.67%" v-if="refresh"></Price>
     <!--  地图-->
-    <Map  v-if="refresh">
-      <!--    height="1080" width="1928"-->
-      <!--    <img src="../../../assets/bigScreenMap.png"  style="position:absolute;width:33.67%;height:50.83%;top:9.62%;left:33.26%;"/>-->
-    </Map>
+    <Map  v-if="refresh" style="position: absolute; left: 33%; top:15%" @map_current_id="activeLands"></Map>
     <!--  仪表盘-->
     <!--  <div :style="{position:'absolute',width:'1000px',height:'250px',top:'1150px',left:'1020px'}">-->
     <DashBoard DashBoardId= "1" style="position: absolute; width: 18%;height: 32%;top: 58%;left: 32%;" v-if="refresh"></DashBoard>
@@ -95,47 +91,12 @@
     <Maintenance style="position:absolute;width:31.39%;height:28.42%;top:39.81%;left:67.98%" v-if="refresh"></Maintenance>
     <!--  浇灌作业
     <Irrig style="position:absolute;width:31.39%;height:28.51%;top:69.44%;left:67.98%" v-if="refresh"></Irrig>-->
-    <Irrig style="position:absolute;width:50%;height:28.51%;top:69.44%;left:70.98%;" v-if="refresh"></Irrig>
+
+    <!--    this one ↓-->
+    <!--    <Irrig style="position:absolute;width:50%;height:28.51%;top:69.44%;left:70.98%;" v-if="refresh"></Irrig>-->
+    <newMaintenance style="position:absolute;width:50%;height:28.51%;top:69.44%;left:60.98%;" v-if="refresh"></newMaintenance>
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    <div v-if="false">
-      <el-button id="fullbtn2" @click="showFullScreen()" style="color:#fff;float: right;background-color: #09153D">全屏展示</el-button>
-      <br>
-      <br>
-      <span style="font-size: 20px;color: #dfe4ed;fontFamily:'Microsoft yahei';margin-top: 10px">选择地块:  </span>
-      <el-select v-model="LotID" placeholder="选择地块"  style="width: 20%;background-color: #09153D;color:#FFF;">
-        <el-option v-for="item in getLotList(lotPathList)" :key="item.lotID" :label="item.lotName"
-                   :value="item.lotID" ></el-option>
-      </el-select>
-      <br>
-      <br>
-      <span style="font-size: 20px;color: #dfe4ed;fontFamily:'Microsoft yahei';margin-top: 10px;float: left;padding-left: 40px">土壤氧化物含量:  </span>
-      <br>
-      <br>
-      <div id="box1" class="pie" style="float:left;width: 13%;padding-left: 10px"></div>
-      <div id="box2" class="pie" style="float:left;width: 13%"></div>
-      <div id="box3" class="pie" style="float:left;width: 13%"></div>
-      <div id="box4" class="pie" style="float:left;width: 13%"></div>
-      <div id="box5" class="pie" style="float:left;width: 13%"></div>
-      <div id="box6" class="pie" style="float:left;width: 13%"></div>
-      <div id="box7" class="pie" style="float:left;width: 13%"></div>
-
-      <div id="bar_container" style="height: 4000px;width: 100%"></div>
-    </div>
 
   </div>
 
@@ -153,6 +114,8 @@
   import SoilElement from "./components/SoilElement"
   import SoilTension from "./components/SoilTension"
   import DashBoard from "./components/DashBoard"
+  import newSoilElement from "./components/newSoilElement"
+  import newMaintenance from "./components/newMaintenance"
 
 
   export default {
@@ -166,7 +129,9 @@
       Price,
       SoilElement,
       SoilTension,
-      DashBoard
+      DashBoard,
+      newSoilElement,
+      newMaintenance
 
     },
     data() {
@@ -225,6 +190,10 @@
       this.loadSoilEntropyInfo();
     },
     methods:{
+      activeLands(data){
+        // data 为当前 active 的地块 id
+        console.log(data)
+      },
       loadSoilEntropyInfo() {
         let param = {LotID: this.LotID};
         this.$api.lot.findSoilEntropyByLotID(param).then((res) => {
@@ -320,7 +289,7 @@
                 }
               }
 
-              console.log(res.data[i].sampleIdentification.substring(res.data[i].sampleIdentification.indexOf('c')-2))
+              // console.log(res.data[i].sampleIdentification.substring(res.data[i].sampleIdentification.indexOf('c')-2))
 
               switch (res.data[i].sampleIdentification.substring(res.data[i].sampleIdentification.indexOf('c')-2)) {
                 case '20cm':
@@ -343,12 +312,12 @@
             //console.log("绘制条形图")
             //legendTempList.push("SO<sub>2</sub>")
             //soilEntropyInfoValue.push(100.2)
-            console.log("结果")
-            console.log(this.depthsoilOxideValue)
-            console.log(this.depthsoilOxideValue["20cm"][0])
-            console.log(this.depthsoilOxideValue["40cm"][0])
-            console.log(this.depthsoilOxideValue["60cm"][0])
-            console.log(this.depthsoilOxideValue["80cm"][0])
+            // console.log("结果")
+            // console.log(this.depthsoilOxideValue)
+            // console.log(this.depthsoilOxideValue["20cm"][0])
+            // console.log(this.depthsoilOxideValue["40cm"][0])
+            // console.log(this.depthsoilOxideValue["60cm"][0])
+            // console.log(this.depthsoilOxideValue["80cm"][0])
 
             //edit!
             //this.drawSoilPie(this.legendTempList);
@@ -365,13 +334,13 @@
       },
       drawCirclePie(){
         for(var i=0;i<7;i++){
-          console.log("绘制环形图")
+          // console.log("绘制环形图")
           var averageValue = this.depthsoilOxideValue["20cm"][i] + this.depthsoilOxideValue["40cm"][i] + this.depthsoilOxideValue["60cm"][i] + this.depthsoilOxideValue["80cm"][i]
-          console.log(averageValue)
+          // console.log(averageValue)
           averageValue = averageValue / 4
-          console.log(averageValue)
+          // console.log(averageValue)
           averageValue = averageValue.toFixed(1)
-          console.log("平均值" + averageValue)
+          // console.log("平均值" + averageValue)
           this.averageValue.push(averageValue)
 
           /*edit!*/
@@ -804,9 +773,13 @@
     margin: 0 auto;
   }
   /*隐藏div的滚动条*/
-  .container::-webkit-scrollbar {display:none}
+  /*.container::-webkit-scrollbar {display:none}*/
   #container{
-    background:url(../../../assets/backgroundImg.jpeg) left top no-repeat;
-    background-size: 100% 100%;
+    /*background:url(../../../assets/backgroundImg.jpeg) left top no-repeat;*/
+    background: #004385;
+    /*background-size: 100% 100%;*/
+    width: 3840px;
+    height: 2160px;
   }
+
 </style>

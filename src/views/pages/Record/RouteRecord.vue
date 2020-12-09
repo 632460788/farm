@@ -413,7 +413,6 @@
       bar(elementId,chartValue,color){
        var dom = document.getElementById(elementId);
        var myChartSoil = echarts.init(dom);
-
        let option = {
          xAxis: {
            type: 'category',
