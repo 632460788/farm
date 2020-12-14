@@ -1,128 +1,35 @@
 <template>
 
-  <div class="container" id="container" style="position:relative; height:100%;width: 100%;scroll-behavior: auto;overflow-y: auto;" >
+  <div class="container" id="container" >
+    <div class="row" >
+      <div class="col">
+        <div id="elementBar1"></div>
+        <span>元素名称: {{elementId[0]}} </span>
+      </div>
+      <div class="col">
+        <div id="elementBar2"></div>
+        <span> 元素名称: {{elementId[1]}} </span>
+      </div>
+      <div class="col">
+        <div id="elementBar3"></div>
+        <span> 元素名称: {{elementId[2]}} </span>
+      </div>
+    </div>
 
-<!--    <div style="position:relative;width: 20%;padding: 5px 0 0 0  ">-->
-<!--      <span style="display:inline-block;font-size: 0.8em;color: black;fontFamily:'Microsoft yahei';">地块编号:  </span>-->
-<!--      <el-select v-model="LotID" placeholder="选择地块编号"  size="small" style="position:relative;width: 35%;">-->
-<!--        <el-option v-for="item in getLotList(lotPathList)" :key="item.lotID" :label="item.lotName"-->
-<!--                   :value="item.lotID" ></el-option>-->
-<!--      </el-select>-->
-<!--      <el-button type="primary" icon="el-icon-search" size="small" style="margin-left: 10%" @click="search">搜索</el-button>-->
-<!--    </div>-->
-
-
-
-    <br>
-    <br>
-
-
-
-
-    <el-row style="position:relative;width: 100%;height: 30%" :gutter="40">
-
-      <el-col :span="6" style="width: 33%;height: 100%;margin: 0 auto">
-        <div id="elementBar1" style="width: 100%;height: 95%;"></div>
-        <div style="position: relative;top: -5%">
-          <span style="font-size: 10px;color: black;font-Family:'Microsoft yahei'">元素名称:  </span>
-          <el-select v-model="elementId[0]"  size="mini" style="position:relative;width: 25%;" @change="elementChange('elementBar1',elementId[0])">
-            <el-option v-for="(item,index) in legendTempList" :key="index" :label="item"
-                       :value="index" ></el-option>
-          </el-select>
-        </div>
-
-      </el-col>
-
-      <el-col :span="6" style="width: 33%;height: 100%">
-        <div id="elementBar2" style="width: 100%;height: 95%"></div>
-        <div style="position: relative;top: -5%;">
-          <span style="font-size: 10px;color: black;font-Family:'Microsoft yahei'">元素名称:  </span>
-          <el-select v-model="elementId[1]"  size="mini" style="position:relative;width: 25%;" @change="elementChange('elementBar2',elementId[1])">
-            <el-option v-for="(item,index) in legendTempList" :key="index" :label="item"
-                       :value="index" ></el-option>
-          </el-select>
-        </div>
-      </el-col>
-
-      <el-col :span="6" style="width: 33%;height: 100%">
-        <div id="elementBar3" style="width: 100%;height: 95%"></div>
-        <div style="position: relative;top: -5%">
-          <span style="font-size: 10px;color: black;font-Family:'Microsoft yahei'">元素名称:  </span>
-          <el-select v-model="elementId[2]"  size="mini" style="position:relative;width: 25%;" @change="elementChange('elementBar3',elementId[2])">
-            <el-option v-for="(item,index) in legendTempList" :key="index" :label="item"
-                       :value="index" ></el-option>
-          </el-select>
-        </div>
-      </el-col>
-
-      <el-col :span="6" style="width: 33%;height: 100%">
-        <div id="elementBar4" style="width: 100%;height: 95%"></div>
-        <div style="position: relative;top: -5%">
-          <span style="font-size: 10px;color: black;font-Family:'Microsoft yahei'">元素名称:  </span>
-          <el-select v-model="elementId[3]"  size="mini" style="position:relative;width: 25%;" @change="elementChange('elementBar4',elementId[3])">
-            <el-option v-for="(item,index) in legendTempList" :key="index" :label="item"
-                       :value="index" ></el-option>
-          </el-select>
-        </div>
-      </el-col>
-
-    </el-row>
-
-    <el-row style="position:relative;width: 100%;height: 30%" :gutter="40">
-
-      <el-col :span="6" style="width: 33%;height: 100%">
-        <div id="elementBar5" style="width: 100%;height: 95%"></div>
-        <div style="position: relative;top: -5%">
-          <span style="font-size: 10px;color: black;font-Family:'Microsoft yahei'">元素名称:  </span>
-          <el-select v-model="elementId[4]"  size="mini" style="position:relative;width: 25%;" @change="elementChange('elementBar5',elementId[4])">
-            <el-option v-for="(item,index) in legendTempList" :key="index" :label="item"
-                       :value="index" ></el-option>
-          </el-select>
-        </div>
-
-      </el-col>
-
-      <el-col :span="6" style="width: 33%;height: 100%">
-        <div id="elementBar6" style="width: 100%;height: 95%"></div>
-        <div style="position: relative;top: -5%">
-          <span style="font-size: 10px;color: black;font-Family:'Microsoft yahei'">元素名称:  </span>
-          <el-select v-model="elementId[5]"  size="mini" style="position:relative;width: 25%;" @change="elementChange('elementBar6',elementId[5])">
-            <el-option v-for="(item,index) in legendTempList" :key="index" :label="item"
-                       :value="index" ></el-option>
-          </el-select>
-        </div>
-      </el-col>
-    </el-row>
-
-    <div id="box1" class="pie" style="display: inline-block;width: 30%;"></div>
-    <div id="box2" class="pie" style="display: inline-block;width: 30%"></div>
-    <div id="box3" class="pie" style="display: inline-block;width: 30%"></div>
-    <div id="box4" class="pie" style="display: inline-block;width: 30%"></div>
-    <div id="box5" class="pie" style="display: inline-block;width: 30%"></div>
-    <div id="box6" class="pie" style="display: inline-block;width: 30%"></div>
-
-
-    <!--  <div>-->
-    <!--    <div id="elementBar5" style="float:left;width: 25%;height: 40%"></div>-->
-    <!--  </div>-->
-    <!--  <div>-->
-    <!--    <div id="elementBar6" style="float:left;width: 25%;height: 40%"></div>-->
-    <!--  </div>-->
-    <!--  <div>-->
-    <!--    <div id="elementBar7" style="float:left;width: 25%;height: 40%"></div>-->
-    <!--  </div>-->
-    <!--  <div>-->
-    <!--    <div id="elementBar8" style="float:left;width: 25%;height: 40%"></div>-->
-    <!--  </div>-->
-
-    <!--    <div id="elementBar1" style="float:left;width: 25%;height: 40%"></div>-->
-    <!--    <div id="elementBar2" style="float:left;width: 25%;height: 40%"></div>-->
-    <!--    <div id="elementBar3" style="float:left;width: 25%;height: 40%"></div>-->
-    <!--    <div id="elementBar4" style="float:left;width: 25%;height: 40%"></div>-->
-    <!--    <div id="elementBar5" style="float:left;width: 25%;height: 40%"></div>-->
-    <!--    <div id="elementBar6" style="float:left;width: 25%;height: 40%"></div>-->
-    <!--    <div id="elementBar7" style="float:left;width: 25%;height: 40%"></div>-->
-    <!--    <div id="elementBar8" style="float:left;width: 25%;height: 40%"></div>-->
+    <div class="row">
+      <div class="col">
+        <div id="elementBar4"></div>
+        <span> 元素名称: {{elementId[3]}} </span>
+      </div>
+      <div class="col">
+        <div id="elementBar5" ></div>
+        <span> 元素名称: {{elementId[4]}} </span>
+      </div>
+      <div class="col">
+        <div id="elementBar6"></div>
+        <span> 元素名称: {{elementId[5]}} </span>
+      </div>
+    </div>
 
 
 
@@ -146,6 +53,7 @@
     },
     data() {
       return {
+        bars:[],
         locIDList: [],
         sensorLocList: [],
         sensorIDList: [],
@@ -174,7 +82,6 @@
           '80cm':[],
         },
         OxideElement:['SiO₂', 'Al₂O₃', 'K₂O','MgO','CaO', 'Na₂O','Fe₂O₃'],
-        boxes:['box1','box2','box3','box4','box5','box6','box7'],
         elementBars:['elementBar1','elementBar2','elementBar3','elementBar4',
           'elementBar5','elementBar6','elementBar7','elementBar8',],
       }
@@ -182,8 +89,23 @@
     },
     mounted() {
       this.loadSoilEntropyInfo();
+      window.addEventListener("resize", ()=>{
+        this.onResize()
+      })
     },
     methods:{
+      onResize: function(){
+        this.$nextTick(
+          ()=>{
+            this.bars.forEach(
+              item=>{
+                item.resize()
+              }
+            )
+          }
+        )
+  
+      },
       search(){
         this.loadSoilEntropyInfo()
       }
@@ -349,13 +271,10 @@
           console.log(averageValue)
           averageValue = averageValue.toFixed(1)
           console.log("平均值" + averageValue)
-          this.pie(averageValue, this.OxideElement[i], this.boxes[i], ['#7494f6', '#d5d6da']);
 
         }
       },
       toFixed:function (str,xlen){
-        //var a = str +"";
-        //return a.substring(0,str.indexOf(".") + xlen);
         return str.toFixed(xlen)
       },
       drawElementBar(){
@@ -383,6 +302,7 @@
       bar(elementId,chartValue,color){
         var dom = document.getElementById(elementId);
         var myChartSoil = echarts.init(dom);
+        this.bars.push(myChartSoil)
 
         let option = {
           xAxis: {
@@ -467,69 +387,6 @@
         }
         return LotList
       },
-      pie: function(pieData, pieName, box, colors ){
-        const that = this;
-        var dom = document.getElementById(box);
-        var myChart = echarts.init(dom);
-
-        const data = pieData;
-        const name = pieName;
-        const option = {
-          grid: {
-            top: 5,
-            bottom: 5,
-          },
-          color: colors,
-          series: [{
-            name: 'valueOfMarket',
-            type: 'pie',
-            center: ['50%', '50%'], // 饼图的圆心坐标
-            radius: ['60%', '75%'],
-            avoidLabelOverlap: false,
-            hoverAnimation: false,
-            label: { //  饼图图形上的文本标签
-              normal: { // normal 是图形在默认状态下的样式
-                show: true,
-                position: 'center',
-                color: '#5e5e5e',
-                fontSize: 14,
-                fontWeight: 'bold',
-                formatter: '{b}\n\n{c}%' // {b}:数据名； {c}：数据值； {d}：百分比
-              }
-            },
-            data: [
-              {
-                value: data,
-                name: name,
-                label: {
-                  normal: {
-                    show: true
-                  }
-                }
-
-              },
-              {
-                value: 100 - data,
-                name: '',
-                label: {
-                  normal: {
-                    show: false
-                  }
-                }
-              }
-            ]
-          }]
-        }
-        myChart.setOption(option,true);
-
-        myChart.dispatchAction({
-          type: 'highlight',
-          seriesIndex: 0,
-          dataIndex: 1
-        });
-
-      },
-
       showAnimation(start){
         // 定时获取传感器参数
         if(start === true){
@@ -570,10 +427,37 @@
 </script>
 
 <style scoped>
-  .pie {
-    height:150px;
+  .row{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    height: 48%;
+    width: 100%;
+  }
+  .col{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+    height: 100%;
+    width: 32%;
+  }
+  .col span{
+    font-size: 10px;
+    color: black;
+    font-Family:'Microsoft yahei';
+  }
+  .col div{
+    width: 100%;
+    height: 95%;
+  }
+
+  #container{
+    display:flex;
+    flex-direction:column;
+    height:100%;
+    width: 100%;
   }
   /*隐藏div的滚动条*/
   .container::-webkit-scrollbar {display:none}
 </style>
-

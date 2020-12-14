@@ -1,5 +1,5 @@
 <template>
-  <div :id="'Oxide'+OxideId" style="width: 100%; height: 100%"></div>
+  <div :id="'Oxide'+OxideId" style="width: 100%; height: 100%;" ></div>
 </template>
 
 <script>
@@ -24,21 +24,21 @@
         required:true
       }
     },
+    data: function(){
+      return {
+        chart: {}
+      }
+    },
     methods:{
       drawLine:function () {
         var dom = document.getElementById("Oxide"+this.OxideId);
         var myChart = echarts.init(dom);
-
+        this.chart = myChart;
         const data = this.pieData;
         const name = this.pieName;
         const option = {
           grid: {
-            // top: 5,
-            // bottom: 5,
-            // x:'0%',
-            // y:'0%',
-            // x2:'0%',
-            // y2:'0%'
+
           },
           color: this.colors,
           series: [{
@@ -92,6 +92,13 @@
     },
     mounted() {
       this.drawLine()
+      window.addEventListener("resize", ()=>{
+        this.$nextTick(
+          ()=>{
+            this.chart.resize()
+          }
+        )
+      })
     }
 
   }

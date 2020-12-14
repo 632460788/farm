@@ -13,6 +13,7 @@
     "@liveqing/liveplayer": "^1.7.3",
     "axios": "^0.19.0",
     "echarts": "^4.2.1",
+    "echarts-stat": "^1.2.0",
     "element-ui": "^2.8.2",
     "file-saver": "^2.0.2",
     "font-awesome": "^4.7.0",

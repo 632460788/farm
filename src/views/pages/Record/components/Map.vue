@@ -1,12 +1,22 @@
 <template>
-  <div id="Map">
-    <div id="container" style="transform: scale(0.43)">
-      <img src="../../../../assets/bigScreenImgs/bigScreenMapBackground.png"  style="top:0px; left: 0px;"/>
-      <img :class="{active: index === curIndex }" v-for="(it, index) in lands" :id="it.id" :style="{left: it.left +'px', top: it.top +'px'}" :src="it.name"/>
-    </div>
+  <div id="root" ref="root"
+    style="width:100%; height:100%">
+    <div id="Map" ref="container"
+      style="height:100%;width:100%;position:relative;">
+        <img ref="background"
+        src="../../../../assets/bigScreenImgs/bigScreenMapBackground.png"
+        style="top:0px; left: 0px;"/>
+        <img
+        :class="{active: index === curIndex }"
+        v-for="(it, index) in lands"
+        :id="it.id"
+        :style="{left: it.left +'px', top: it.top +'px'}"
+        :src="it.name"/>
+
+  </div>
   </div>
 </template>
-
+<script src="https://lib.sinaapp.com/js/jquery/2.0.2/jquery-2.0.2.min.js"></script>
 <script>
   export default {
     name: "Map",
@@ -197,7 +207,31 @@
       carousel: function(){
         this.curIndex = (this.curIndex + 1) % this.lands.length;
         this.$emit("map_current_id", this.indexes[this.curIndex])
+      },
+      onResize: function(){
+        // 图片宽度 1928px
+        let rootWidth = this.$refs.root.offsetWidth
+        let rootHeight = this.$refs.root.offsetHeight
+        let backgroundHeight = this.$refs.background.offsetHeight
+        let backgroundWidth = this.$refs.background.offsetWidth
+        let width = this.$refs.container.offsetWidth
+        let height = this.$refs.container.offsetHeight
+        $("#Map").css("transform", "scale("+(width/backgroundWidth)+")")
+        $("#Map").css("transform-origin", "0 0")
       }
+    },
+    beforeMount: function(){
+      this.onResize()
+    },
+    mounted: function(){
+      window.addEventListener("resize", ()=>{
+        this.$nextTick(
+          ()=>{
+            this.onResize()
+          }
+        )
+      })
+
     },
     beforeMount: function(){
       for(let i = 0; i < this.lands.length; i++){
@@ -210,7 +244,7 @@
 
 <style scoped>
 
-  #container > img{
+  #Map > img{
     position: absolute;
   }
 

@@ -3,100 +3,114 @@
   <!--  TODO 查询功能：按一天之内，一周之内，一个月之内，选定日期查询-->
   <!--  TODO 导出功能：将所选记录进行导出-->
 
-  <div class="container" id="container" style="position: relative;scroll-behavior: auto;overflow: hidden;" >
-    <el-button id="fullbtn" @click="showFullScreen() " style="color:#fff;float: right;background-color: #09153D">全屏展示</el-button>
-    <!--  土壤氧化物环形图  v-show="!isthisFullScreen" -->
-    <div v-for="OxideId in OxideIds">
-      <Oxide  v-bind:OxideId="OxideId" v-bind:pieData="averageValue[OxideId]" v-bind:pie-name="OxideElement[OxideId]" v-bind:colors="['#00ffff', '#0A164F']" :style="{position:'absolute',height:'12.96%',width:'7.26%',left: 2.07+(OxideId%3)*10.89 +'%',top:'12.50%'}" v-if="OxideId < 3 && averageValue[OxideId] > 0 && refresh" :key="containerKey"></Oxide>
-      <Oxide  v-bind:OxideId="OxideId" v-bind:pieData="averageValue[OxideId]" v-bind:pie-name="OxideElement[OxideId]" v-bind:colors="['#00ffff', '#0A164F']" :style="{position:'absolute',height:'12.96%',width:'7.26%',left: 2.07+(OxideId%3)*10.89 +'%',top:'25.46%'}" v-if="OxideId >=3 && averageValue[OxideId] > 0 && refresh" :key="containerKey"></Oxide>
+  <div class="container" id="container" >
+    <!-- <el-button id="fullbtn" @click="showFullScreen() " style="color:#fff;float: right;background-color: #09153D">全屏展示</el-button> -->
+    <!-- 左列 -->
+    <div class="screenColumn">
+      <!-- 气象信息、土壤温湿度行 -->
+      <div style="display:flex;flex-direction:row">
+        <!-- 气象表 -->
+        <div style="flex:1">
+          <div class="label" >气象信息</div>
+          <div style="display:flex;flex-direction:row">
+            <div class="el-icon-wind-power">风速: {{windPower}} m/s</div>
+            <div class="el-icon-wind-power">最大风速: {{maxWindPower}} m/s</div>
+          </div>
+          <div class="label">土壤温湿度</div>
+          <div style="display:flex;flex-direction:row">
+            <div class="el-icon-sunny"></div>
+            <div><span>土壤温度: {{temperature}} ℃</span></div>
+            <div class="el-icon-cloudy"></div>
+            <div><span>土壤湿度: {{humidity}} %</span></div>
+          </div>
+
+        </div>
+
+        <!-- 玫瑰图 -->
+        <div style="flex:2">
+          <Rose/>
+        </div>
+      </div>
+
+
+
+      <!-- 柱状图行 -->
+      <div style="flex:1">
+        <new-soil-element
+          style="width: 100%;"
+          v-if="refresh"
+          :key="containerKey">
+        </new-soil-element>
+      </div>
+      <!-- 环形图行 -->
+      <div style="flex:1; ">
+        <div style="width:100%; display:flex;height:50%;flex-direction:row; justify-content:space-around">
+          <Oxide
+            v-for="item in 3"
+            style="width: 32%;height: 100%"
+            :OxideId="item-1"
+            :pieData="averageValue[item-1]"
+            :pie-name="OxideElement[item-1]"
+            :colors="['#00ffff', '#0A164F']"
+            v-if="averageValue[item-1] > 0 && refresh"
+            :key="containerKey">
+          </Oxide>
+        </div>
+        <div style="width:100%; display:flex; height:50%;flex-direction:row; justify-content:space-around">
+          <Oxide
+            v-for="item in 3"
+            style="width: 32%;height:100%"
+            :OxideId="item+2"
+            :pieData="averageValue[item+2]"
+            :pie-name="OxideElement[item+2]"
+            :colors="['#00ffff', '#0A164F']"
+            v-if="averageValue[item-1] > 0 && refresh"
+            :key="containerKey">
+          </Oxide>
+        </div>
+      </div>
+      <!-- 日历行 -->
+      <div>
+        <MaintenanceCalendar/>
+      </div>
     </div>
-    <!--  土壤元素柱状图-->
-    <new-soil-element
-      style="position:absolute;width:31.34%;height:40%;top:39.81%;left:0.67%" v-if="refresh" :key="containerKey">
-    </new-soil-element>
-    <!--    <new-soil-element-->
-    <!--                 style="position:absolute;width:31.34%;height:28.42%;top:39.81%;left:0.67%" v-if="refresh" :key="containerKey">-->
-    <!--    </new-soil-element>-->
-    <!--    <div style="position:absolute;width:31.34%;height:28.42%;top:39.81%;left:0.67%;" v-if="soilEntropyInfoValue['20cm'][0] && refresh" :key="containerKey">-->
-    <!--      <div style="width: 100%;height:11%;margin: 0;padding: 0">-->
 
-    <!--      </div>-->
-    <!--      <div style="width: 100%;height:35%;margin: 0;padding: 0;">-->
+    <!-- 中列 -->
+    <div class="screenColumn">
+      <!-- 标题栏 -->
+      <div>
+      </div>
 
-    <!--            <div style="width: 20%;height: 100%;margin: 0 5%;display: inline-block;position: relative;text-align: center">-->
-    <!--              <img src="../../../assets/sixedges.svg" style="height: 80%;">-->
-    <!--              <span style="color: #8EFCE8;position: absolute;left: 39%;top:30%">82</span>-->
-    <!--              <div style="width: 100%;height: 20%;margin: 0;padding: 0;top:-5%;position: relative">-->
-    <!--                <span style="color: #8EFCE8;font-size: 1.5vh">溯源节点数</span>-->
-    <!--              </div>-->
-    <!--            </div>-->
-    <!--        <div style="width: 20%;height: 100%;margin: 0 5%;display: inline-block;position: relative;text-align: center">-->
-    <!--          <img src="../../../assets/sixedges.svg" style="height: 80%;">-->
-    <!--          <span style="color: #8EFCE8;position: absolute;left: 30%;top:30%">1457</span>-->
-    <!--          <div style="width: 100%;height: 20%;margin: 0;padding: 0;top:-5%;position: relative">-->
-    <!--            <span style="color: #8EFCE8;font-size: 1.5vh">区块高度</span>-->
-    <!--          </div>-->
-    <!--        </div>-->
-    <!--        <div style="width: 20%;height: 100%;margin: 0 5%;display: inline-block;position: relative;text-align: center">-->
-    <!--          <img src="../../../assets/sixedges.svg" style="height: 80%;">-->
-    <!--          <span style="color: #8EFCE8;position: absolute;left: 25%;top:30%">43699</span>-->
-    <!--          <div style="width: 100%;height: 20%;margin: 0;padding: 0;top:-5%;position: relative">-->
-    <!--            <span style="color: #8EFCE8;font-size: 1.5vh">培育信息量</span>-->
-    <!--          </div>-->
-    <!--        </div>-->
-    <!--&lt;!&ndash;            <img src="../../../assets/sixedges.svg" style="display:inline-block;height: 80%;max-width: 22%;margin:0 8%">&ndash;&gt;-->
-    <!--&lt;!&ndash;            <img src="../../../assets/sixedges.svg" style="display:inline-block;height: 80%;max-width: 22%;margin:0 8%">&ndash;&gt;-->
-    <!--      </div>-->
-    <!--      <div style="width: 100%;height:42%;margin: 0;padding: 0;align-items: center">-->
-    <!--        <img src="../../../assets/LineImage.svg" style="width: 90%;height: 100%">-->
-    <!--      </div>-->
-    <!--      <div style="width: 100%;height:12%;margin: 0;padding: 0;">-->
-    <!--        <div style="width: 90%;height: 100%;margin: 0 auto;position: relative;text-align: left">-->
-    <!--          <div style="display:inline-block;width: 40%;height: 100%">-->
-    <!--            <img src="../../../assets/TracingDetail.svg" style="height: 70%;">-->
-    <!--            <span style="display:inline-block;color: #8EFCE8;font-size: 1.5vh;top: 0;position: absolute;margin: 0 1%">溯源详情</span>-->
-    <!--          </div>-->
-    <!--          <div style="display:inline-block;width: 25%;height: 100%;text-align: left">-->
-    <!--            <img src="../../../assets/black-point.svg" style="height: 50%;display:inline-block;top: -8%;position: relative;" >-->
-    <!--            <span style="display:inline-block;color: #8EFCE8;font-size: 1.5vh;top: 0;position: absolute;margin: 0 1%">新增溯源产品</span>-->
-    <!--          </div>-->
-    <!--          <div style="display:inline-block;width: 25%;height: 100%;text-align: left">-->
-    <!--            <img src="../../../assets/yellow-point.svg" style="height: 50%;display:inline-block;top: -8%;position: relative;">-->
-    <!--            <span style="display:inline-block;color: #8EFCE8;font-size: 1.5vh;top: 0;position: absolute;margin: 0 1%">溯源产品唤醒数</span>-->
-    <!--          </div>-->
+      <!-- 地图 -->
+      <div style="flex:3">
+        <Map
+          @map_current_id="activeLands"/>
+      </div>
 
+      <!-- 散点图 -->
+      <div style="flex:2;" class="screenBlock">
+        <Scatter></Scatter>
+      </div>
+    </div>
 
-    <!--        </div>-->
-    <!--      </div>-->
+    <!-- 右列 -->
+    <div class="screenColumn">
+      <!-- 新闻资讯行 -->
+      <div style="flex:1;" class="screenBlock">
+        <News/>
+      </div>
 
-    <!--    </div>-->
-    <!--  价格趋势折线图-->
-    <Price style="position:absolute;width:31.34%;height:28.51%;top:69.44%;left:0.67%" v-if="refresh"></Price>
-    <!--  地图-->
-    <Map  v-if="refresh" style="position: absolute; left: 33%; top:15%" @map_current_id="activeLands"></Map>
-    <!--  仪表盘-->
-    <!--  <div :style="{position:'absolute',width:'1000px',height:'250px',top:'1150px',left:'1020px'}">-->
-    <DashBoard DashBoardId= "1" style="position: absolute; width: 18%;height: 32%;top: 58%;left: 32%;" v-if="refresh"></DashBoard>
-    <DashBoard DashBoardId= "2" style="position: absolute; width: 18%;height: 32%;top: 58%;left: 50%;" v-if="refresh"></DashBoard>
-    <DashBoard DashBoardId= "3" style="position: absolute; width: 18%;height: 32%;top: 75%;left: 32%;" v-if="refresh"></DashBoard>
-    <DashBoard DashBoardId= "4" style="position: absolute; width: 18%;height: 32%;top: 75%;left: 50%;" v-if="refresh"></DashBoard>
+      <!-- 产地价格行 -->
+      <div style="flex:1;" class="screenBlock">
+        <PriceTrend/>
+      </div>
 
+      <!-- 市场价格行 -->
+      <div style="flex:1;" class="screenBlock">
+        <PriceTrend/>
+      </div>
 
-    <!--  土壤张力-->
-    <SoilTension graphId= "1" style="position: absolute; width: 7.26%;height: 12.96%;top: 12.50%;left: 72.18%;" v-if="refresh"></SoilTension>
-    <SoilTension graphId= "2" style="position: absolute; width: 7.26%;height: 12.96%;top: 25.46%;left: 72.18%;" v-if="refresh"></SoilTension>
-    <SoilTension graphId= "3" style="position: absolute; width: 7.26%;height: 12.96%;top: 12.50%;left: 87.85%;" v-if="refresh"></SoilTension>
-    <SoilTension graphId= "4" style="position: absolute; width: 7.26%;height: 12.96%;top: 25.46%;left: 87.85%;" v-if="refresh"></SoilTension>
-    <!--  养护作业-->
-    <Maintenance style="position:absolute;width:31.39%;height:28.42%;top:39.81%;left:67.98%" v-if="refresh"></Maintenance>
-    <!--  浇灌作业
-    <Irrig style="position:absolute;width:31.39%;height:28.51%;top:69.44%;left:67.98%" v-if="refresh"></Irrig>-->
-
-    <!--    this one ↓-->
-    <!--    <Irrig style="position:absolute;width:50%;height:28.51%;top:69.44%;left:70.98%;" v-if="refresh"></Irrig>-->
-    <newMaintenance style="position:absolute;width:50%;height:28.51%;top:69.44%;left:60.98%;" v-if="refresh"></newMaintenance>
-
-
+    </div>
 
   </div>
 
@@ -108,7 +122,7 @@
   import {mapState} from "vuex";
   import Oxide from "./components/Oxide"
   import Maintenance from "./components/Maintenance"
-  import Map from "./components/Map"
+
   import Irrig from "./components/Irrig"
   import Price from "./components/Price"
   import SoilElement from "./components/SoilElement"
@@ -117,13 +131,21 @@
   import newSoilElement from "./components/newSoilElement"
   import newMaintenance from "./components/newMaintenance"
 
-
+  import Map from "./components/Map"
+  import Scatter from "./components/Scatter"
+  import PriceTrend from "./components/PriceTrend"
+  import News from "./components/News"
+  import Rose from "./components/Rose"
+  import MaintenanceCalendar from "./components/MaintenanceCalendar"
   export default {
     name: "BigScreen",
     components: {
+      MaintenanceCalendar,
+      Rose,
       echarts,
       Maintenance,
       Map,
+      News,
       Irrig,
       Oxide,
       Price,
@@ -131,12 +153,17 @@
       SoilTension,
       DashBoard,
       newSoilElement,
-      newMaintenance
-
+      newMaintenance,
+      Scatter,
+      PriceTrend
     },
     data() {
       return {
         //add
+        windPower: 5,
+        maxWindPower: 10,
+        temperature: 23,
+        humidity: 15,
         containerKey:1,
         OxideIds:[0,1,2,3,4,5],
         averageValue:[],
@@ -192,7 +219,7 @@
     methods:{
       activeLands(data){
         // data 为当前 active 的地块 id
-        console.log(data)
+        // console.log(data)
       },
       loadSoilEntropyInfo() {
         let param = {LotID: this.LotID};
@@ -773,13 +800,33 @@
     margin: 0 auto;
   }
   /*隐藏div的滚动条*/
-  /*.container::-webkit-scrollbar {display:none}*/
   #container{
-    /*background:url(../../../assets/backgroundImg.jpeg) left top no-repeat;*/
-    background: #004385;
-    /*background-size: 100% 100%;*/
-    width: 3840px;
-    height: 2160px;
+    /* background: #004385; */
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    flex-wrap: nowrap;
+    justify-content: space-around;
+    scroll-behavior: auto;
+    overflow: hidden;
   }
 
+  .screenColumn{
+    height: 95%;
+    width: 30%;
+    display: flex;
+    flex-direction: column;
+  }
+  .screenColumn>div{
+    width: 100%;
+    display:flex;
+    flex-direction:column;
+    justify-content: space-around;
+    align-items: center;
+  }
+  .label{
+    text-align: left;
+  }
 </style>
