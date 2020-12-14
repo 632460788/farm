@@ -10,7 +10,7 @@
         :class="{active: index === curIndex }"
         v-for="(it, index) in lands"
         :id="it.id"
-        :style="{left: it.left +'px', top: it.top +'px'}"
+        :style="{left: (parseInt(it.left) + 40)+'px', top: (parseInt(it.top) + 25) +'px'}"
         :src="it.name"/>
 
   </div>
@@ -221,9 +221,14 @@
       }
     },
     beforeMount: function(){
-      this.onResize()
+
     },
     mounted: function(){
+      this.$nextTick(
+        ()=>{
+          this.onResize()
+        }
+      )
       window.addEventListener("resize", ()=>{
         this.$nextTick(
           ()=>{
@@ -249,7 +254,7 @@
   }
 
   .active {
-    filter: drop-shadow(4px 4px 4px #fce) hue-rotate(120deg);
+    filter: drop-shadow(4px 4px 4px #fce) hue-rotate(250deg);
     transform: scale(1.5);
   }
 </style>

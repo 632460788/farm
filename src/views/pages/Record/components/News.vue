@@ -1,11 +1,11 @@
 <template>
-  <div id="root" ref="NewsRoot">
+  <div id="root" ref="NewsRoot" style="justify-content:start">
     <div v-for="item in news">
 
-      <div style="display:flex" @click="onTitleClick(item)">{{item.title}}</div>
+      <div style="display:flex;font-size:48px;margin-top:16px;" @click="onTitleClick(item)">{{item.title}}</div>
 
-      <div class="scroll" >
-        <span class="scroll-item" :data-text="item.content">{{item.content}}</span>
+      <div class="scroll" style="margin-top:16px" >
+        <span class="scroll-item" style="font-size:32px;":data-text="item.content">{{item.content}}</span>
 
       </div>
 

@@ -71,48 +71,56 @@
 
         let option = {
 
-            tooltip: {
-                trigger: 'axis',
-                axisPointer: {
-                    type: 'cross'
-                }
+            grid: {
+              left: '3%',
+              right: '4%',
+              bottom: '3%',
+              containLabel: true
             },
             title: {
                 text: this.chartTitle,
                 left: 'center',
-                top: 16
+                x:'center',
+                textStyle:{
+                  fontSize: 48,
+                  color: "#ffffff"
+                }
             },
             xAxis: {
                 type: 'value',
                 splitLine: {
                     lineStyle: {
-                        type: 'dashed'
+                        type: 'dashed',
+                        width: 3
                     }
                 },
                 splitNumber: 20
             },
             yAxis: {
                 type: 'value',
-                min: -40,
                 splitLine: {
                     lineStyle: {
-                        type: 'dashed'
+                        type: 'dashed',
+                        width: 3
                     }
                 }
-            },
-            grid: {
-                top: 90
             },
             series: [
               {
                 name: 'scatter',
                 type: 'scatter',
+                symbolSize: 60,
+
+                itemStyle:{
+                    color: "#018ce3"
+                },
                 emphasis: {
+                  color:"#e3a802",
                     label: {
                         show: true,
                         position: 'right',
                         color: 'blue',
-                        fontSize: 16
+                        fontSize: 32
                     }
                 },
                 data: this.chartData
@@ -123,16 +131,21 @@
                 smooth: true,
                 showSymbol: false,
                 data: myRegression.points,
+                lineStyle:{
+                  normal:{
+                    width: 5
+                  }
+                },
                 markPoint: {
                     itemStyle: {
-                        color: 'transparent'
+                        color: 'transparent',
                     },
                     label: {
                         show: true,
                         position: 'left',
                         formatter: myRegression.expression,
                         color: '#333',
-                        fontSize: 14
+                        fontSize: 32
                     },
                     data: [{ coord: myRegression.points[myRegression.points.length - 1] }]
                 }

@@ -1,47 +1,49 @@
 <template>
   <div id="root">
     <!-- 标题 -->
-    <div style="text-align: left">
-      <span>{{ title }}</span>&nbsp;&nbsp;
-      </span>{{ place }}&nbsp;&nbsp;{{time}}</span>
+    <div style="display:flex; flex-direction: row; align-items:center; justify-content: start">
+      <span style="font-size:32px">{{ title }}</span>&nbsp;&nbsp;
+      <span style="font-size:24px;">{{ place }}&nbsp;&nbsp;{{time}}</span>
     </div>
 
     <!-- 指示牌 -->
-    <div style="display:flex">
-      <div style="display:flex; flex: 2">
+    <div style="display:flex;justify-content:space-around">
+      <div style="display:flex;width:32.5%" :class="{rise: todayPrice > yestodayPrice, down: todayPrice < yestodayPrice}">
         <!-- 今日价格 -->
-        <div class="gravity_center" style="flex:1">
+        <div class="gravity_center" style="font-size:120px;flex:1">
           {{ todayPrice }}
         </div>
 
         <!-- 昨日价格、涨跌幅 -->
-        <div class="gravity_center" style="flex:1">
-          昨日: {{ yestodayPrice}}</br>
-          涨幅: {{ (yestodayPrice - todayPrice) / todayPrice * 100}}%
+        <div class="gravity_center" style="flex-direction:column;font-size:32px;flex:1">
+          <span>昨日: {{ yestodayPrice}}</span></br>
+          <span v-if="todayPrice > yestodayPrice">涨幅: {{ (todayPrice - yestodayPrice) / yestodayPrice * 100}}%</span>
+          <span v-if="todayPrice === yestodayPrice"> -- </span>
+          <span v-else>跌幅: {{(todayPrice - yestodayPrice) / yestodayPrice * 100}} %</span>
         </div>
       </div>
 
-      <div id="priceTable" style="flex:3;display:flex;justify-content: space-between">
+      <div id="priceTable" style="width:63.5%;display:flex;justify-content: space-between">
         <div>
           <div style="opacity:0">占位用</div>
-          <div>最高:</div>
-          <div>最低:</div>
+          <div style="font-size:32px">最高:</div>
+          <div style="font-size:32px">最低:</div>
         </div>
         <div>
-          <div>近一周</div>
-          <div>{{  priceTable.week.highest   }}</div>
-          <div>{{  priceTable.week.lowest  }}</div>
+          <div style="font-size:32px">近一周</div>
+          <div style="font-size:24px">{{  priceTable.week.highest   }}</div>
+          <div style="font-size:24px">{{  priceTable.week.lowest  }}</div>
 
         </div>
         <div>
-          <div>近一月</div>
-          <div>{{  priceTable.month.highest  }}</div>
-          <div>{{  priceTable.month.lowest }}</div>
+          <div style="font-size:32px">近一月</div>
+          <div style="font-size:24px">{{  priceTable.month.highest  }}</div>
+          <div style="font-size:24px">{{  priceTable.month.lowest }}</div>
         </div>
         <div>
-          <div>近一年</div>
-          <div>{{  priceTable.year.highest   }}</div>
-          <div>{{  priceTable.year.lowest  }}</div>
+          <div style="font-size:32px">近一年</div>
+          <div style="font-size:24px">{{  priceTable.year.highest   }}</div>
+          <div style="font-size:24px">{{  priceTable.year.lowest  }}</div>
         </div>
       </div>
     </div>
@@ -51,8 +53,11 @@
     <div class="block" ref="carousel" style="flex:1">
       <div class="slide" ref="slide">
         <div class="slide-auto wrapper" ref="wrapper">
-          <div :key="item.id" v-for="item in chartData" class="item" :id="item.id"> </div>
-
+          <div
+            :key="item.id"
+            v-for="item in chartData"
+            class="item"
+            :id="item.id"> </div>
         </div>
       </div>
     </div>
@@ -60,6 +65,12 @@
 </template>
 
 <style scoped>
+  .rise{
+    color: #FF3333
+  }
+  .down{
+    color: #66FF33
+  }
   #root{
     height: 100%;
     width: 100%;
@@ -169,28 +180,30 @@
               title: "价格变化",
               subtitle: "近一周数据",
 
-              data: [
-                [96.24, 11.35],
-                [81.31, 108.68]
-              ]
+              data: {
+                "周一":96.24,
+                "周二":81.31
+              }
             },
             {
               title: "价格变化",
               subtitle: "近一月数据",
 
-              data: [
-                [96.24, 11.35],
-                [81.31, 108.68]
-              ]
+              data: {
+                "1号": 96.34,
+                "2号": 96.35
+              }
+
             },
             {
               title: "价格变化",
               subtitle: "近一年数据",
 
-              data:[
-                [96.24, 11.35],
-                [81.31, 108.68]
-              ]
+              data:{
+                "1-1": 96.24,
+                "1-2": 11.35
+              }
+
             }
           ]
         }
@@ -237,54 +250,91 @@
       drawChart: function(id, data){
         let chart = echarts.init(document.getElementById(id))
         this.charts.push(chart)
+        let xData = []
+        let yData = []
+        for(let k in data.data){
+          xData.push(k)
+          yData.push(data.data[k])
+        }
         let option = {
-            tooltip: {
-                trigger: 'axis',
-                axisPointer: {
-                    type: 'cross'
-                }
-            },
-            title: {
+            title: [
+              {
                 text: data.title,
-                subtext: data.subtitle,
                 left: 'center',
-                top: 16
+                textStyle:{
+                  fontSize: 48,
+                  color: "#ffffff"
+                },
+              },{
+                text: data.subtitle,
+                left: "75%",
+                textStyle:{
+                  fontSize: 32,
+                  color: "#8e8f92"
+                }
+              }
+            ],
+            xAxis: [
+              {
+                type: 'category',
+                boundaryGap: false,
+                data: xData,
+                axisLabel:{
+                  fontSize:32,
+                  color: "#FFFFFF"
+                },
+                splitLine: {
+                    lineStyle: {
+                        type: 'dashed',
+                        width: 3
+                    }
+                }
+              }
+            ],
+            grid: {
+              left: '3%',
+              right: '4%',
+              bottom: '3%',
+              containLabel: true
             },
-            xAxis: {
+            yAxis: [{
+                name:'元',
                 type: 'value',
                 splitLine: {
                     lineStyle: {
-                        type: 'dashed'
+                        type: 'dashed',
+                        width: 3
                     }
                 },
-                splitNumber: 20
-            },
-            yAxis: {
-                type: 'value',
-                min: -40,
-                splitLine: {
-                    lineStyle: {
-                        type: 'dashed'
-                    }
+                splitNumber:2,
+                axisLine:{
+                  show:false
+                },
+                // axisTick:{
+                //   show:false,
+                // },
+                axisLabel:{
+                  fontSize:32,
+                  color: "#FFFFFF"
+                },
+                nameTextStyle:{
+                  fontSize: 32,
+                  color: "#FFFFFF"
                 }
-            },
-            grid: {
-              top:50
-            },
+            }],
+
             series: [
               {
                 name: 'line',
                 type: 'line',
                 smooth: true,
-                emphasis: {
-                    label: {
-                        show: true,
-                        position: 'right',
-                        color: 'blue',
-                        fontSize: 16
-                    }
+                lineStyle:{
+                  normal:{
+                    width: 5,
+                    color: "#018ce3"
+                  }
                 },
-                data: data.data
+                data: yData
               },
             ]
         }

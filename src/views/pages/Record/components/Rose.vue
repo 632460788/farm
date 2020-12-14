@@ -55,7 +55,11 @@
         var option = {
           title : {
             text: this.title,
-            x:'center'
+            x:'center',
+            textStyle:{
+              fontSize : 32,
+              color: "#fff"
+            }
           },
           grid: {
             top:50
@@ -70,10 +74,14 @@
             orient:'vertical',
             right:"right",
             top:"center",
-            data: legends
+            data: legends,
+            textStyle: { //图例文字的样式
+              color: '#ffffff',
+              fontSize: 32
+            },
           },
           toolbox: {
-            show:true,//是否显示工具栏组件
+            show:false,//是否显示工具栏组件
             feature:{
               mark:{show: true},
               dataView: {show: true, readOnly: false},

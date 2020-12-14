@@ -2,112 +2,117 @@
   <!--  TODO 网关记录：网关记录统计，包括功能有：-->
   <!--  TODO 查询功能：按一天之内，一周之内，一个月之内，选定日期查询-->
   <!--  TODO 导出功能：将所选记录进行导出-->
-
-  <div class="container" id="container" >
-    <!-- <el-button id="fullbtn" @click="showFullScreen() " style="color:#fff;float: right;background-color: #09153D">全屏展示</el-button> -->
-    <!-- 左列 -->
-    <div class="screenColumn">
-      <!-- 气象信息、土壤温湿度行 -->
-      <div style="display:flex;flex-direction:row">
-        <!-- 气象表 -->
-        <div style="flex:1">
-          <div class="label" >气象信息</div>
-          <div style="display:flex;flex-direction:row">
-            <div class="el-icon-wind-power">风速: {{windPower}} m/s</div>
-            <div class="el-icon-wind-power">最大风速: {{maxWindPower}} m/s</div>
-          </div>
-          <div class="label">土壤温湿度</div>
-          <div style="display:flex;flex-direction:row">
-            <div class="el-icon-sunny"></div>
-            <div><span>土壤温度: {{temperature}} ℃</span></div>
-            <div class="el-icon-cloudy"></div>
-            <div><span>土壤湿度: {{humidity}} %</span></div>
-          </div>
-
-        </div>
-
-        <!-- 玫瑰图 -->
-        <div style="flex:2">
-          <Rose/>
-        </div>
-      </div>
-
-
-
-      <!-- 柱状图行 -->
-      <div style="flex:1">
-        <new-soil-element
-          style="width: 100%;"
-          v-if="refresh"
-          :key="containerKey">
-        </new-soil-element>
-      </div>
-      <!-- 环形图行 -->
-      <div style="flex:1; ">
-        <div style="width:100%; display:flex;height:50%;flex-direction:row; justify-content:space-around">
-          <Oxide
-            v-for="item in 3"
-            style="width: 32%;height: 100%"
-            :OxideId="item-1"
-            :pieData="averageValue[item-1]"
-            :pie-name="OxideElement[item-1]"
-            :colors="['#00ffff', '#0A164F']"
-            v-if="averageValue[item-1] > 0 && refresh"
-            :key="containerKey">
-          </Oxide>
-        </div>
-        <div style="width:100%; display:flex; height:50%;flex-direction:row; justify-content:space-around">
-          <Oxide
-            v-for="item in 3"
-            style="width: 32%;height:100%"
-            :OxideId="item+2"
-            :pieData="averageValue[item+2]"
-            :pie-name="OxideElement[item+2]"
-            :colors="['#00ffff', '#0A164F']"
-            v-if="averageValue[item-1] > 0 && refresh"
-            :key="containerKey">
-          </Oxide>
-        </div>
-      </div>
-      <!-- 日历行 -->
-      <div>
-        <MaintenanceCalendar/>
-      </div>
+  <div id="root" style="background-color:#16191d">
+    <!-- 标题栏 -->
+    <div id="title" >
+      玮益生态农业枳壳大数据平台
     </div>
+    <div class="container" id="container">
+      <!-- <el-button id="fullbtn" @click="showFullScreen() " style="color:#fff;float: right;background-color: #09153D">全屏展示</el-button> -->
+      <!-- 左列 -->
+      <div class="screenColumn" style="width:29%">
+        <!-- 气象信息、土壤温湿度行 -->
+        <div class="screenBlock" style="display:flex;flex-direction:row;width:100%; height:18%">
+          <!-- 气象表 -->
+          <div style="height:100%; width: 46.8%;display:flex;flex-direction:column; justify-content: space-around">
+            <div style="height:47%; display:flex; flex-direction:column; justify-content: space-between">
+              <div class="label" style="width:100%;height:23.75%;font-size:32px" >气象信息</div>
+              <div style="height:62.5%; width:100%;display:flex;justify-content:start;flex-direction:row">
+                <!-- 风速 -->
+                <div class="el-icon-wind-power" style="width:46%;font-size:80px">{{windPower}} m/s</div>
+                <!-- 最大风速 -->
+                <div class="el-icon-wind-power" style="width:46%;flex:1;font-size:80px">{{maxWindPower}} m/s</div>
+              </div>
+            </div>
+            <div style="height: 47%; display:flex; flex-direction:column; justify-content: space-around">
+              <div class="label" style="width:100%;height:23.75%;font-size:32px">土壤温湿度</div>
+              <div style="height:62.5%; width:100%;display:flex;justify-content:start;flex-direction:row">
+                <!-- 土壤温度 -->
+                <div class="el-icon-sunny" style="width:46%;font-size:80px">{{temperature}} ℃</div>
+                <!-- 土壤湿度 -->
+                <div class="el-icon-cloudy" style="width:46%;font-size:80px">{{humidity}} %</div>
+              </div>
+            </div>
+          </div>
 
-    <!-- 中列 -->
-    <div class="screenColumn">
-      <!-- 标题栏 -->
-      <div>
+          <!-- 玫瑰图 -->
+          <div style="height:100%;width:50%">
+            <Rose/>
+          </div>
+        </div>
+
+        <!-- 柱状图行 -->
+        <div class="screenBlock" style="width:100%; height:22.5%">
+          <new-soil-element
+            style="width: 100%;"
+            v-if="refresh"
+            :key="containerKey">
+          </new-soil-element>
+        </div>
+
+        <!-- 环形图行 -->
+        <div class="screenBlock" style="width:100%; height:23%">
+          <div style="width:100%; display:flex;height:50%;flex-direction:row; justify-content:space-around">
+            <Oxide
+              v-for="item in 3"
+              style="width: 32%;height: 100%"
+              :OxideId="item-1"
+              :pieData="averageValue[item-1]"
+              :pie-name="OxideElement[item-1]"
+              :colors="['#e3a802','#018ce3']"
+              v-if="averageValue[item-1] > 0 && refresh"
+              :key="containerKey"/>
+          </div>
+          <div style="width:100%; display:flex; height:50%;flex-direction:row; justify-content:space-around">
+            <Oxide
+              v-for="item in 3"
+              style="width: 32%;height:100%"
+              :OxideId="item+2"
+              :pieData="averageValue[item+2]"
+              :pie-name="OxideElement[item+2]"
+              :colors="['#e3a802','#018ce3']"
+              v-if="averageValue[item-1] > 0 && refresh"
+              :key="containerKey"/>
+          </div>
+        </div>
+        <!-- 日历行 -->
+        <div class="screenBlock" style="width:100%; height:34.5%">
+          <MaintenanceCalendar/>
+        </div>
       </div>
 
-      <!-- 地图 -->
-      <div style="flex:3">
-        <Map
-          @map_current_id="activeLands"/>
+      <!-- 中列 -->
+      <div class="screenColumn" style="width:39%">
+
+        <!-- 地图 -->
+        <div class="screenBlock" style="width:100%;height:62%">
+          <Map
+            @map_current_id="activeLands"/>
+        </div>
+
+        <!-- 散点图 -->
+        <div style="width:100%;height:34.5%" class="screenBlock">
+          <Scatter></Scatter>
+        </div>
       </div>
 
-      <!-- 散点图 -->
-      <div style="flex:2;" class="screenBlock">
-        <Scatter></Scatter>
-      </div>
-    </div>
+      <!-- 右列 -->
+      <div class="screenColumn" style="width:29%">
+        <!-- 新闻资讯行 -->
+        <div style="width:100%;height:34%" class="screenBlock">
+          <News/>
+        </div>
 
-    <!-- 右列 -->
-    <div class="screenColumn">
-      <!-- 新闻资讯行 -->
-      <div style="flex:1;" class="screenBlock">
-        <News/>
-      </div>
+        <!-- 产地价格行 -->
+        <div style="width:100%;height:31.5%" class="screenBlock">
+          <PriceTrend/>
+        </div>
 
-      <!-- 产地价格行 -->
-      <div style="flex:1;" class="screenBlock">
-        <PriceTrend/>
-      </div>
+        <!-- 市场价格行 -->
+        <div style="width:100%;height:31.5%" class="screenBlock">
+          <PriceTrend/>
+        </div>
 
-      <!-- 市场价格行 -->
-      <div style="flex:1;" class="screenBlock">
-        <PriceTrend/>
       </div>
 
     </div>
@@ -792,18 +797,37 @@
     }
   }
 </script>
-
 <style scoped>
-  .pie {
-    width:160px;
-    height:160px;
-    margin: 0 auto;
+
+  #root{
+    color:#ffffff;
+    font-family:'Microsoft YaHei';
+    width:100%;
+    height:100%;
+    display:flex;
+    flex-direction:column;
+    justify-content:space-around;
+
+  }
+  .screenBlock{
+    background-color: #282b2f;
+    padding: 1.5rem;
+    margin: 1.5rem;
+  }
+  #title{
+    background-color:#282b2f;
+    width:98.5%;
+    height:11%;
+    font-size:80px;
+    padding-left: 4rem;
+    display:flex;
+    align-items:center;
+    overflow-x: hidden;
   }
   /*隐藏div的滚动条*/
   #container{
-    /* background: #004385; */
     width: 100%;
-    height: 100%;
+    height: 87%;
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -814,8 +838,7 @@
   }
 
   .screenColumn{
-    height: 95%;
-    width: 30%;
+    height: 100%;
     display: flex;
     flex-direction: column;
   }

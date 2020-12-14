@@ -53,7 +53,7 @@
                 show: true,
                 position: 'center',
                 color: '#FFFFFF',
-                fontSize: 14,
+                fontSize: 32,
                 fontWeight: 'bold',
                 formatter: '{b}\n\n{c}%' // {b}:数据名； {c}：数据值； {d}：百分比
               }

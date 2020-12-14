@@ -4,30 +4,24 @@
     <div class="row" >
       <div class="col">
         <div id="elementBar1"></div>
-        <span>元素名称: {{elementId[0]}} </span>
       </div>
       <div class="col">
         <div id="elementBar2"></div>
-        <span> 元素名称: {{elementId[1]}} </span>
       </div>
       <div class="col">
         <div id="elementBar3"></div>
-        <span> 元素名称: {{elementId[2]}} </span>
       </div>
     </div>
 
     <div class="row">
       <div class="col">
         <div id="elementBar4"></div>
-        <span> 元素名称: {{elementId[3]}} </span>
       </div>
       <div class="col">
         <div id="elementBar5" ></div>
-        <span> 元素名称: {{elementId[4]}} </span>
       </div>
       <div class="col">
         <div id="elementBar6"></div>
-        <span> 元素名称: {{elementId[5]}} </span>
       </div>
     </div>
 
@@ -104,36 +98,12 @@
             )
           }
         )
-  
+
       },
       search(){
         this.loadSoilEntropyInfo()
       }
-      ,
-      elementChange(chartId,dataIndex){
-        var chartValue = [this.soilEntropyInfoValue["20cm"][0][dataIndex],this.soilEntropyInfoValue["40cm"][0][dataIndex],
-          this.soilEntropyInfoValue["60cm"][0][dataIndex],this.soilEntropyInfoValue["80cm"][0][dataIndex]]
-        var id = dataIndex % 4
-        switch (chartId) {
-          case 'elementBar1':
-          case 'elementBar5':
-            this.bar(chartId,chartValue,'#7494f6')
-            break
-          case 'elementBar2':
-          case 'elementBar6':
-            this.bar(chartId,chartValue,'#db2220')
-            break
-          case 'elementBar3':
-          case 'elementBar7':
-            this.bar(chartId,chartValue,'#eba935')
-            break
-          case 'elementBar4':
-          case 'elementBar8':
-            this.bar(chartId,chartValue,'#4d862b')
-            break
 
-        }
-      }
       ,
       loadSoilEntropyInfo() {
         let param = {LotID: this.LotID};
@@ -281,30 +251,39 @@
         for (let i = 0; i < 6; i++) {
           var chartValue = [this.soilEntropyInfoValue["20cm"][0][this.elementId[i]],this.soilEntropyInfoValue["40cm"][0][this.elementId[i]],
             this.soilEntropyInfoValue["60cm"][0][this.elementId[i]],this.soilEntropyInfoValue["80cm"][0][this.elementId[i]]]
-          var id = i % 4
+          var id = i % 2
           switch (id) {
             case 0:
-              this.bar(this.elementBars[i],chartValue,'#7494f6')
+              this.bar(this.elementBars[i],chartValue,'#e3a802', this.elementId[i])
               break
             case 1:
-              this.bar(this.elementBars[i],chartValue,'#db2220')
-              break
-            case 2:
-              this.bar(this.elementBars[i],chartValue,'#eba935')
-              break
-            case 3:
-              this.bar(this.elementBars[i],chartValue,'#4d862b')
+              this.bar(this.elementBars[i],chartValue,'#018ce3', this.elementId[i])
               break
 
           }
         }
       },
-      bar(elementId,chartValue,color){
+      bar(elementId,chartValue,color, title){
         var dom = document.getElementById(elementId);
         var myChartSoil = echarts.init(dom);
         this.bars.push(myChartSoil)
 
         let option = {
+          grid: {
+            left: '3%',
+            right: '4%',
+            bottom: '3%',
+            containLabel: true
+          },
+          title: {
+            text: "元素名称:" + title,
+            x:'center',
+
+            textStyle:{
+              fontSize: 32,
+              color: "#ffffff"
+            }
+          },
           xAxis: {
             type: 'category',
             data: ['20cm', '40cm', '60cm', '80cm'],
@@ -312,19 +291,29 @@
             axisLine:{
               show:false,
               lineStyle:{
-                color:'#52585f'
+                color:'#fff'
               }
             },
             axisTick:{
               alignWithLabel: true,
               lineStyle:{
-                color:'#b2b5b7'
+                color:'#fff'
               }
+            },
+            axisLabel:{
+              fontSize:32,
+              color: "#FFFFFF"
             }
           },
           yAxis: {
-            name:'单位：ppm',
-            offset:-5,
+            splitLine: {
+                lineStyle: {
+                    type: 'dashed',
+                    width: 3
+                }
+            },
+            name:'ppm',
+            offset:-10,
             type: 'value',
             splitNumber:2,
             axisLine:{
@@ -334,13 +323,18 @@
               show:false,
             },
             axisLabel:{
-              fontSize:10
+              fontSize:32,
+              color: "#FFFFFF"
+            },
+            nameTextStyle:{
+              fontSize: 32,
+              color: "#FFFFFF"
             }
           },
           series: [{
             data: chartValue,
             type: 'bar',
-            barWidth: 24
+            barWidth: 24,
           }],
 
           color:color
