@@ -18,10 +18,13 @@ import 'jquery'
 axios.defaults.withCredentials=true;
 Vue.config.productionTip = false
 
+Vue.prototype.$axios = axios
+
 Vue.use(ElementUI);
 Vue.use(api);
 Vue.use(VueAwesomeSwiper, /* { default global options } */);
 Vue.prototype.$qs = qs;
+Vue.prototype.$showFullScreen = {flag:false,refreshTimes:0}
 
 
 

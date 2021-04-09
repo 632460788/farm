@@ -1,75 +1,80 @@
 <template>
   <div class="page-container">
-    <div class="content-class">
-      <!-- 选择时间范围 -->
-<!--      目前问题：80天时间内，可以显示每一种传感器的数据并绘制图像
-          但是，不能同时显示所有传感器的图像
--->
-      <el-row class="elrow1" type="flex" justify="start"> <!--type="flex" justify="start" 一起使用，可以设置水平对齐方式-->
-        <span style="font-weight: bold;margin-left:13px;margin-right:30px">时间范围：</span>
-        <el-radio-group v-model="radio1" @change="selectTimeRange">
-          <el-radio label='allTime'>全部</el-radio>
-          <el-radio label=1>过去1天内</el-radio>
-          <el-radio label=7>过去1周内</el-radio>
-          <el-radio label=30>过去1个月内</el-radio>
-        </el-radio-group>
-      </el-row>
+    <!-- 选择时间范围 -->
+    <!--      目前问题：80天时间内，可以显示每一种传感器的数据并绘制图像
+              但是，不能同时显示所有传感器的图像
+    -->
+    <div style="padding-top:10px;padding-left:15px;padding-right:15px;">
+      <el-form :inline="true" :model="lotQueryCondition" size="small">
+        <el-row>
+          <el-col :span="4">
+            <el-form-item label="地块编号">
+              <el-input style="width: 8vw" v-model="lotQueryCondition.lotID" placeholder="输入地块编号"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="4">
+            <el-form-item label="传感器编号">
+              <el-input style="width: 8vw" v-model="lotQueryCondition.sensorID" placeholder="输入传感器编号"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="4">
+            <el-form-item label="传感器类型">
+              <el-select style="width: 8vw" v-model="lotQueryCondition.sensorName">
+                <el-option v-for="item in allSensorType" :key="item.id" :label="item.chName" :value="item.name"></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6" :offset="3">
+            <el-form-item label="时间范围">
+              <el-date-picker style="width: 16vw" v-model="lotQueryCondition.duration" type="daterange"
+                              range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期">
+              </el-date-picker>
+            </el-form-item>
+          </el-col>
+          <el-col :span="3">
+            <el-form-item>
+              <el-button icon="fa fa-search" type="primary" @click="queryByCondition()" :loading="isSearching"> 查询</el-button>
+            </el-form-item>
+            <el-form-item>
+              <el-button icon="fa fa-times" @click="clearQueryCondition()"> 重置</el-button>
+            </el-form-item>
+          </el-col>
+        </el-row>
+      </el-form>
+    </div>
+    <SocialChat></SocialChat>
 
-      <!--选择传感器类型-->
-      <el-row class="elrow2" type="flex" justify="start">
-        <span style="font-weight: bold;margin-right:30px">传感器类型：</span>
-        <el-radio-group v-model="radio2" @change="selectSensorRange">
-          <el-radio label="allSensor">全部</el-radio>
-          <el-radio label="soilTension30">土壤张力30公分</el-radio>
-          <el-radio label="soilTension60">土壤张力60公分</el-radio>
-          <el-radio label="soilTension90">土壤张力90公分</el-radio>
-          <el-radio label="soilMoiCap">土壤湿度电容</el-radio>
-          <el-radio label="soilMoi485">土壤湿度845</el-radio>
-          <el-radio label="soilMoiTem">土壤温度计</el-radio>
-        </el-radio-group>
-      </el-row>
-
-      <!--分割线-->
-<!--      <el-row>-->
-<!--        <div style="width:95%;margin:auto">-->
-<!--        <el-divider></el-divider>-->
-<!--        </div>-->
-<!--      </el-row>-->
-
-      <!--表格-->
+    <div v-if="isShowChart" id="line_container" style="height: 500px;width: 100%"> </div>
+    <!--表格-->
+    <div v-if="isShowTable">
       <el-row>
-          <el-table
-            :data="tableData.slice((currentPage-1)*pageSize,currentPage*pageSize)"
-            style="margin-top:30px;width: 100%;font-size: small" stripe
-            :default-sort = "{prop: 'date', order: 'descending'}">
-            <el-table-column header-align="center" align="center" prop="id" label="ID" sortable min-width="150"></el-table-column>
-            <el-table-column header-align="center" align="center" prop="lotNum" label="地块号" sortable min-width="150"></el-table-column>
-            <el-table-column header-align="center" align="center" prop="sensorId" label="传感器编号" sortable min-width="150"></el-table-column>
-            <el-table-column header-align="center" align="center" prop="sensorName" label="传感器类型" sortable min-width="150"></el-table-column>
-            <el-table-column header-align="center" align="center" prop="sensorValue" label="传感器值" sortable min-width="150"></el-table-column>
-            <el-table-column header-align="center" align="center" prop="time" label="时间" sortable min-width="150"></el-table-column>
-          </el-table>
+        <el-table
+          :data="tableData.slice((currentPage-1)*pageSize,currentPage*pageSize)"
+          style="margin-top:30px;width: 100%;font-size: small" stripe
+          :default-sort = "{prop: 'date', order: 'descending'}">
+          <el-table-column header-align="center" align="center" prop="id" label="ID" sortable min-width="150"></el-table-column>
+          <el-table-column header-align="center" align="center" prop="lotNum" label="地块号" sortable min-width="150"></el-table-column>
+          <el-table-column header-align="center" align="center" prop="sensorId" label="传感器编号" sortable min-width="150"></el-table-column>
+          <el-table-column header-align="center" align="center" prop="sensorName" label="传感器类型" sortable min-width="150"></el-table-column>
+          <el-table-column header-align="center" align="center" prop="sensorValue" label="传感器值" sortable min-width="150"></el-table-column>
+          <el-table-column header-align="center" align="center" prop="time" label="时间" sortable min-width="150"></el-table-column>
+        </el-table>
       </el-row>
 
       <!--分页-->
       <el-row type="flex" justify="end" style="margin-top:10px">
-          <!-- current-page：默认当前页；page-size：每页总条数；layout：组件布局；total：总条数-->
-          <el-pagination
-            @current-change="handleCurrentChange"
-            :current-page.sync="currentPage"
-            :page-size=pageSize
-            layout="total, prev, pager, next"
-            :total=totalRecordNum>
-          </el-pagination>
+        <!-- current-page：默认当前页；page-size：每页总条数；layout：组件布局；total：总条数-->
+        <el-pagination
+          @current-change="handleCurrentChange"
+          :current-page.sync="currentPage"
+          :page-size=pageSize
+          layout="total, prev, pager, next"
+          :total=totalRecordNum>
+        </el-pagination>
       </el-row>
-
     </div>
-    <div id="line_container" style="height: 700px;width: 100%"> </div>
+
   </div>
-
-
-
-
 </template>
 
 <script>
@@ -81,59 +86,112 @@
   export default {
     data() {
       return {
-        radio1: 'allTime',
-        radio2:'allSensor',
-        tableData:[],
-        currentPage:1,
-        pageSize:10,
+        isShowTable: false,
+        isShowChart: false,
+        isSearching: false,
+        lotQueryCondition: {
+          lotID: '',
+          sensorID: '',
+          sensorName: '',
+          duration: ''
+        },
+        tableData: [],
+        currentPage: 1,
+        pageSize: 10,
         totalRecordNum:0,
         allSensorType:{
-          "soilTension30":{"sensorType":"15","subType":"30"},
-          "soilTension60":{"sensorType":"15","subType":"60"},
-          "soilTension90":{"sensorType":"15","subType":"90"},
-          "soilMoiCap":{"sensorType":"20","subType":"0"},
-          "soilMoi485":{"sensorType":"0E","subType":"0"},
-          "soilMoiTem":{"sensorType":"24","subType":"0"}
-        },
-        sensorData: {
-          '土壤张力计30公分': [],
-          '土壤张力计60公分': [],
-          '土壤张力计90公分': []
+          soilTension30:{
+            name: "soilTension30",
+            sensorType:"15",
+            subType:"30",
+            chName:"土壤张力30公分"
+          },
+          soilTension60:{
+            name: "soilTension60",
+            sensorType:"15",
+            subType:"60",
+            chName:"土壤张力60公分"
+          },
+          soilTension90:{
+            name: "soilTension90",
+            sensorType:"15",
+            subType:"90",
+            chName:"土壤张力90公分"
+          },
+          soilMoiCap:{
+            name: "soilMoiCap",
+            sensorType:"20",
+            subType:"0",
+            chName:"土壤湿度电容"
+          },
+          soilMoi485:{
+            name: "soilMoi485",
+            sensorType:"0E",
+            subType:"0",
+            chName:"土壤湿度485"
+          },
+          soilMoiTem:{
+            name: "soilMoiTem",
+            sensorType:"24",
+            subType:"0",
+            chName:"土壤温度计"
+          }
         },
         legend_echarts:[],
-        data_echarts:[],
-          //{
-          //'SID1':[],'SID2':[],'SID3':[],'SID4':[],'SID5':[],'SID6':[],'SID7':[],'SID8':[],'SID9':[],'SID10':[],
-          //'SID11':[], 'SID12':[], 'SID13':[], 'SID14':[], 'SID15':[], 'SID11':[], 'SID11':[], 'SID11':[], 'SID11':[],
-
-        //}
-
+        data_echarts:[]
       }
     },
     methods: {
       // 初始化表格数据
-      initTableData: function () {
+      //initTableData: function () {
 
-        /*****************由于数据接收问题，对allTime标签对应的时间进行更改，涉及allTime-allSensor和allTime-数据量极多的传感器  将alltime改成70***************************************************/
-        let oldDate = new Date("2020-8-7")
-        let newDate = new Date()
-        let interval = parseInt((newDate-oldDate)/(1000*60*60*24))
-        let param = {time: interval};
-        this.$api.lot.findLotRecordByTime(param).then((res) => {
+      /*****************由于数据接收问题，对allTime标签对应的时间进行更改，涉及allTime-allSensor和allTime-数据量极多的传感器  将alltime改成70***************************************************/
+      // let oldDate = new Date("2020-8-7")
+      // let newDate = new Date()
+      // let interval = parseInt((newDate-oldDate) / (1000*60*60*24))
+      // console.log(interval)
+      // let param = {
+      //   time: interval,
+      //   sensorType: 15,
+      //   subType: 90
+      // };
+      // this.$api.lot.findLotRecordByTimeAndSensor(param).then((res) => {
+      //   this.selectTimeAndSensor(res);
+      // });
+      //},
 
-          this.selectTimeAndSensor(res);
+      clearQueryCondition(){
+        let condition;
+        for (condition in this.lotQueryCondition) {
+          this.lotQueryCondition[condition] = '';
+        }
+      },
 
+      queryByCondition() {
+        this.isSearching = true
+
+        let param = {
+          lotID: this.lotQueryCondition.lotID,
+          sensorID: this.lotQueryCondition.sensorID,
+          sensorType: this.allSensorType[this.lotQueryCondition.sensorName].sensorType,
+          subType: this.allSensorType[this.lotQueryCondition.sensorName].subType,
+          timeInterval: this.lotQueryCondition.duration==='' ? '' : this.lotQueryCondition.duration[0].getTime()+","+this.lotQueryCondition.duration[1].getTime(),
+        };
+
+        this.$api.lot.findLotRecordByMultiConditions(param).then((res) => {
+          if (res.data === undefined) {
+            this.$notify.error({title: '错误', message: '未查询到数据'});
+            return;
+          }
+          this.tableData = res.data;
+          this.currentPage = 1;
+          this.totalRecordNum = res.data.length;
+          // this.formatLineData()
+          // this.drawLineCharts()
         });
 
-        // this.$api.lot.findAllLotRecord().then((res) => {
-        //   this.tableData = res.data;
-        //   this.totalRecordNum = res.data.length;
-        // })
-      },
-      clearsensorData(){
-        this.sensorData.土壤张力计30公分 = []
-        this.sensorData.土壤张力计60公分 = []
-        this.sensorData.土壤张力计90公分 = []
+        this.isShowTable = true
+        this.isSearching = false
       },
 
       // 当前页改变时触发，传入当前页码
@@ -142,80 +200,8 @@
         console.log("页码" + currentPage)
       },
 
-      // 选择时间范围
-      selectTimeRange:function (label) {
-        this.radio1 = label;
-        console.log(this.radio1)
-        console.log(this.radio2)
-
-
-        if(this.radio2 != "allSensor"){
-          //<时间+传感器类型>条件
-
-          if(label=="allTime"){
-
-            /*****************由于数据接收问题，对allTime标签对应的时间进行更改，涉及allTime-allSensor和allTime-数据量极多的传感器  将alltime改成70***************************************************/
-            let oldDate = new Date("2020-8-7")
-            let newDate = new Date()
-            let interval = parseInt((newDate-oldDate)/(1000*60*60*24))
-            let param = {time:interval,sensorType:this.allSensorType[this.radio2].sensorType,subType:this.allSensorType[this.radio2].subType};
-            this.$api.lot.findLotRecordByTimeAndSensor(param).then((res)=>{
-              console.log(res.data)
-              this.selectTimeAndSensor(res);
-            });
-
-            //   let param = {sensorType:this.allSensorType[this.radio2].sensorType,subType:this.allSensorType[this.radio2].subType};
-            // this.$api.lot.findLotRecordBySensor(param).then((res)=>{
-            //   this.selectTimeAndSensor(res);
-            // });
-
-
-
-
-
-          }else {
-
-            let param = {time:this.radio1,sensorType:this.allSensorType[this.radio2].sensorType,subType:this.allSensorType[this.radio2].subType};
-
-
-            //this.$api.lot.findLotRecordByTimeAndSensor(JSON.stringify(param)).then((res)=>{
-            this.$api.lot.findLotRecordByTimeAndSensor(param).then((res)=>{
-
-              console.log(res.data)
-              this.selectTimeAndSensor(res);
-            });
-
-          }
-
-        }else{
-          //只有<时间>条件
-          if(label=="allTime"){
-
-            /*****************由于数据接收问题，对allTime标签对应的时间进行更改，涉及allTime-allSensor和allTime-数据量极多的传感器  将alltime改成70***************************************************/
-            let oldDate = new Date("2020-8-7")
-            let newDate = new Date()
-            let interval = parseInt((newDate-oldDate)/(1000*60*60*24))
-            let param = {time: interval};
-            this.$api.lot.findLotRecordByTime(param).then((res) => {
-              this.selectTimeAndSensor(res);
-            });
-
-            //
-            // this.$api.lot.findAllLotRecord().then((res) => {
-            //   this.selectTimeAndSensor(res);
-            // })
-          }else {
-
-
-            let param = {time: this.radio1};
-            this.$api.lot.findLotRecordByTime(param).then((res) => {
-              this.selectTimeAndSensor(res);
-            });
-          }
-        }
-      },
       // 选择时间和传感器范围
-      selectSensorRange:function(label){
+      /*selectSensorRange:function(label){
         this.radio2 = label;
         console.log(this.radio2)
         if(this.radio1 !=="allTime" ){
@@ -242,7 +228,7 @@
           //只有<传感器>条件
           if(label==="allSensor"){
 
-            /*****************由于数据接收问题，对allTime标签对应的时间进行更改，涉及allTime-allSensor和allTime-数据量极多的传感器  将alltime改成70***************************************************/
+            /!*****************由于数据接收问题，对allTime标签对应的时间进行更改，涉及allTime-allSensor和allTime-数据量极多的传感器  将alltime改成70***************************************************!/
             let oldDate = new Date("2020-8-7")
             let newDate = new Date()
             let interval = parseInt((newDate-oldDate)/(1000*60*60*24))
@@ -257,7 +243,7 @@
           }else{
 
 
-            /*****************由于数据接收问题，对allTime标签对应的时间进行更改，涉及allTime-allSensor和allTime-数据量极多的传感器  将alltime改成70***************************************************/
+            /!*****************由于数据接收问题，对allTime标签对应的时间进行更改，涉及allTime-allSensor和allTime-数据量极多的传感器  将alltime改成70***************************************************!/
             let oldDate = new Date("2020-8-7")
             let newDate = new Date()
             let interval = parseInt((newDate-oldDate)/(1000*60*60*24))
@@ -273,11 +259,10 @@
           }
 
         }
-      },
+      },*/
 
       //选择范围的功能函数
       selectTimeAndSensor:function (res) {
-
         if (res.data === undefined) {
           this.$notify.error({title: '错误', message: '未查询到数据'});
           return;
@@ -401,7 +386,7 @@
     },
 
     mounted() {
-      this.initTableData()
+      // this.initTableData()
     },
     computed: {
       ...mapState({

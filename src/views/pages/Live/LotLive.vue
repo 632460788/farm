@@ -277,9 +277,11 @@
       // 转换数据今天 00:00:00 - 至目前为止的数据
       loadSensorTData() {
         if (this.sensorIDList !== null && this.sensorIDList.length > 0) {
-          let param = {sensorID: this.sensorIDList, needTodayData: true};
+          let param = {sensorID: this.sensorIDList, needTodayData: false};
           this.$api.sensor.getSensorLive(param).then((res) => {
+
             this.dataFormatEchart(res.data);
+
             // console.log(this.sensorGbyType)
             this.drawST15Line()
             this.drawST20Line()
@@ -296,7 +298,9 @@
         this.$api.sensor.getSensorLive(param).then((res) => {
           if (res.code === 200) {
             // 转换数据
+
             this.dataFormatEchart(res.data);
+
             // 更新实时折线图显示
             this.drawST15Line()
             this.drawST20Line()

@@ -213,42 +213,6 @@
 
 
 
-<!--              <el-row type="flex" justify="left">-->
-<!--            -->
-<!--                <el-col :span="10">-->
-<!--                  <video id="myPlayer1" style="color: #82848a" muted height="300px" width="400px" autoplay  playsInline webkit-playsinline controls controlsList='nosetting noremote nofootbar' >-->
-<!--                    <source src="rtmp://rtmp01open.ys7.com/openlive/fb30605e51e6416fa7bb79ced83c1398" type="rtmp/flv"/>-->
-<!--            &lt;!&ndash;        rtmp://rtmp01open.ys7.com/openlive/fb30605e51e6416fa7bb79ced83c1398&ndash;&gt;-->
-<!--                  </video>-->
-<!--                </el-col>-->
-<!--                <el-col :span="10">-->
-<!--                  <video id="myPlayer2" style="color: #82848a" muted height="300px" width="400px" autoplay controls controlsList='nosetting noremote footbar' >-->
-<!--                    <source src="ezopen://open.ys7.com/f01018a141094b7fa138b9d0b856507b.live" type="rtmp/flv"/>-->
-<!--                  </video>-->
-<!--                </el-col>-->
-<!--            -->
-<!--              </el-row>-->
-    <!--
-  <el-row justify="left" style="width: 70%;margin-top: 20px">
-      <swiper :options="swiperOption">
-         slides
-        <swiper-slide  v-for="(item,index) in swiperimages" :key="index">
-          <img :src="item.src"/>
-        </swiper-slide>
-        <swiper-slide><img :src=swiperimages[0].src height="100" id="cctv1" @click="onMessage(1)"></swiper-slide>
-        <swiper-slide><img :src=swiperimages[1].src height="100" @click="onMessage(2)"></swiper-slide>
-        <swiper-slide><img :src=swiperimages[2].src height="100" @click="onMessage(3)"></swiper-slide>
-        <swiper-slide><img :src=swiperimages[3].src height="100" @click="onMessage(4)"></swiper-slide>
-        <swiper-slide><img :src=swiperimages[4].src height="100" @click="onMessage(5)"></swiper-slide>
-
-
-        <div class="swiper-pagination"  slot="pagination"></div>
-        <div class="swiper-button-prev" slot="button-prev"></div>
-        <div class="swiper-button-next" slot="button-next"></div>
-      </swiper>
-  </el-row>
-  -->
-
 
   </div>
 </template>

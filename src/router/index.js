@@ -19,6 +19,7 @@ import { getIFramePath, getIFrameUrl } from '@/utils/iframe'
 Vue.use(Router);
 
 const router = new Router({
+  logined:1,
   routes: [
     {
       path: '/',

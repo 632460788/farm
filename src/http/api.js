@@ -12,6 +12,8 @@ import * as dailyjobs from './modules/dailyjobs'
 import * as irrigation from './modules/irrigation'
 import * as fertilization from './modules/fertilization'
 import * as ipcamera from './modules/ipcamera'
+import * as news from './modules/news'
+import * as price from './modules/price'
 
 
 // 默认全部导出
@@ -26,5 +28,7 @@ export default {
   dailyjobs,
   irrigation,
   fertilization,
-  ipcamera
+  ipcamera,
+  news,
+  price
 }

@@ -41,6 +41,15 @@ export const findAllLotRecord = data =>{
 }
 
 // Todo 根据时间和传感器的范围查找地块记录
+export const findLotRecordByMultiConditions = params =>{
+  return axios({
+    url:'lot/findLotRecordByMultiConditions',
+    type:'get',
+    params
+  })
+}
+
+// Todo 根据时间和传感器的范围查找地块记录
 export const findLotRecordByTimeAndSensor = params =>{
   return axios({
     url:'lot/findLotRecordByTimeAndSensor',

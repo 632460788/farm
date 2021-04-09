@@ -1,29 +1,35 @@
 <template>
   <div id="root" ref="root"
-    style="width:100%; height:100%">
+       style="width:100%; height:100%">
     <div id="Map" ref="container"
-      style="height:100%;width:100%;position:relative;">
-        <img ref="background"
-        src="../../../../assets/bigScreenImgs/bigScreenMapBackground.png"
-        style="top:0px; left: 0px;"/>
-        <img
+         style="height:100%;width:100%;position:relative;font-size: 40px">
+      <img ref="background"
+           src="../../../../assets/bigScreenImgs/bigScreenMapBackground.png"
+           style="top:0px; left: 0px;"/>
+      <img
         :class="{active: index === curIndex }"
         v-for="(it, index) in lands"
         :id="it.id"
         :style="{left: (parseInt(it.left) + 40)+'px', top: (parseInt(it.top) + 25) +'px'}"
         :src="it.name"/>
 
-  </div>
+
+    </div>
+
   </div>
 </template>
 <script src="https://lib.sinaapp.com/js/jquery/2.0.2/jquery-2.0.2.min.js"></script>
 <script>
   export default {
     name: "Map",
+    props:{
+      lotNameDict:Object,
+      LotId:Number
+    },
     data(){
       return {
         timer: {},
-        indexes: {},
+        indexes: [],
         curIndex: 0,
         lands:[
           {
@@ -205,8 +211,16 @@
     },
     methods:{
       carousel: function(){
-        this.curIndex = (this.curIndex + 1) % this.lands.length;
-        this.$emit("map_current_id", this.indexes[this.curIndex])
+        // alert(this.indexes.indexOf(this.LotId.toString()))
+        if (this.indexes.indexOf(this.LotId.toString()) != -1){
+          this.curIndex = this.indexes.indexOf(this.LotId.toString())
+        }
+        else
+          return
+          // this.curIndex = (this.curIndex + 1) % this.lands.length;
+        // alert(JSON.stringify(this.lotNameDict))
+
+        // this.$emit("map_current_id", this.indexes[this.curIndex])
       },
       onResize: function(){
         // 图片宽度 1928px
@@ -219,9 +233,6 @@
         $("#Map").css("transform", "scale("+(width/backgroundWidth)+")")
         $("#Map").css("transform-origin", "0 0")
       }
-    },
-    beforeMount: function(){
-
     },
     mounted: function(){
       this.$nextTick(
@@ -236,15 +247,24 @@
           }
         )
       })
-
     },
     beforeMount: function(){
       for(let i = 0; i < this.lands.length; i++){
-        this.indexes[i] = this.lands[i].id;
+        this.indexes.push(this.lands[i].id)
       }
-      this.timer = setInterval(this.carousel, 1000);
+    },
+    watch: {
+      'LotId': {
+        handler(newVal, oldVal) {
+          if (newVal !== oldVal) {
+            //
+            this.carousel()
+          }
+        }
+      }
     }
   }
+
 </script>
 
 <style scoped>
@@ -255,6 +275,6 @@
 
   .active {
     filter: drop-shadow(4px 4px 4px #fce) hue-rotate(250deg);
-    transform: scale(1.5);
+    /*transform: scale(1.5);*/
   }
 </style>

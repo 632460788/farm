@@ -1,9 +1,13 @@
 <template>
-  <div id="container_newMaintenance">
-<!--    <div id="Irrigcontainer" style="position:relative;height: 100%;">-->
+  <div id="root" style="width:100%;height: 100%">
 
-<!--    </div>-->
+    <div id="container_newMaintenance" style="width:100%;height: 100%;   color: #fff;background-color: #282b2f">
+  <!--    <div id="Irrigcontainer" style="position:relative;height: 100%;">-->
+
+  <!--    </div>-->
+    </div>
   </div>
+
 </template>
 
 <script>
@@ -18,71 +22,97 @@
         fertiPageResult: [],
         dates:[],
         scatterData:[],
-        pieDatas:[]
+        pieDatas:{}
       }
     },
     methods:{
       async getData() {
 
-       await this.$api.irrigation.findPage(null).then((res) => {
-          res.data.content = res.data;
-          this.tempPageResult = res.data
-          for (let i = 0; i < this.tempPageResult.length; i++) {
-            this.irrigPageResult.push({"time":new Date(this.tempPageResult[i].datetime1).getTime()})
-            var tempTime = new Date(this.tempPageResult[i].datetime1).getTime()
-            var time = echarts.format.formatTime('yyyy-MM-dd', tempTime)
-            if(this.pieDatas[time]){
-              this.pieDatas[time]["irrigation"] += 1
-            }
-            else {
-              this.pieDatas[time] = {}
-              this.pieDatas[time]["irrigation"] = 0
-            }
-            this.dates.push(new Date(this.tempPageResult[i].datetime1).getTime())
-          }
-        })
+       // await this.$api.irrigation.findPage(null).then((res) => {
+       //    res.data.content = res.data;
+       //    this.tempPageResult = res.data
+       //    for (let i = 0; i < this.tempPageResult.length; i++) {
+       //      this.irrigPageResult.push({"time":new Date(this.tempPageResult[i].datetime1).getTime()})
+       //      var tempTime = new Date(this.tempPageResult[i].datetime1).getTime()
+       //      var time = echarts.format.formatTime('yyyy-MM-dd', tempTime)
+       //      if(this.pieDatas[time]){
+       //        this.pieDatas[time]["irrigation"] += 1
+       //      }
+       //      else {
+       //        this.pieDatas[time] = {}
+       //        this.pieDatas[time]["irrigation"] = 1
+       //      }
+       //      this.dates.push(new Date(this.tempPageResult[i].datetime1).getTime())
+       //    }
+       //  })
 
 
-        await this.$api.fertilization.findPage(null).then((res) => {
-          res.data.content = res.data;
-          this.tempPageResult = res.data
-          for (let i = 0; i < this.tempPageResult.length; i++) {
-            this.fertiPageResult.push({"time":new Date(this.tempPageResult[i].datetime1).getTime()})
-            var tempTime = new Date(this.tempPageResult[i].datetime1).getTime()
-            var time = echarts.format.formatTime('yyyy-MM-dd', tempTime)
-            if(this.pieDatas[time]){
-              this.pieDatas[time]["fertilization"] += 1
-            }
-            else {
-              this.pieDatas[time] = {}
-              this.pieDatas[time]["fertilization"] = 0
-            }
-            this.dates.push(new Date(this.tempPageResult[i].datetime1).getTime())
-          }
-        })
+        // await this.$api.fertilization.findPage(null).then((res) => {
+        //   res.data.content = res.data;
+        //   this.tempPageResult = res.data
+        //   for (let i = 0; i < this.tempPageResult.length; i++) {
+        //     this.fertiPageResult.push({"time":new Date(this.tempPageResult[i].datetime1).getTime()})
+        //     var tempTime = new Date(this.tempPageResult[i].datetime1).getTime()
+        //     var time = echarts.format.formatTime('yyyy-MM-dd', tempTime)
+        //     if(this.pieDatas[time]){
+        //       this.pieDatas[time]["fertilization"] += 1
+        //     }
+        //     else {
+        //       this.pieDatas[time] = {}
+        //       this.pieDatas[time]["fertilization"] = 1
+        //     }
+        //     this.dates.push(new Date(this.tempPageResult[i].datetime1).getTime())
+        //   }
+        // })
 
         await  this.$api.dailyjobs.findPage(null).then((res) => {
           res.data.content = res.data;
-          this.tempPageResult = res.data
-          for (let i = 0; i < this.tempPageResult.length; i++) {
-            this.maintenPageResult.push({"time":new Date(this.tempPageResult[i].datetime1).getTime()})
-            var tempTime = new Date(this.tempPageResult[i].datetime1).getTime()
+          let tempPageResult = res.data
+          for (let i = 0; i < tempPageResult.length; i++) {
+            this.maintenPageResult.push({"time":new Date(tempPageResult[i].datetime1).getTime()})
+            var tempTime = new Date(tempPageResult[i].datetime1).getTime()
             var time = echarts.format.formatTime('yyyy-MM-dd', tempTime)
-            if(this.pieDatas[time]){
-              this.pieDatas[time]["management"] += 1
+            var LotID = tempPageResult[i]["regionId"]
+            // if(this.pieDatas[time] === undefined) {
+            //   this.pieDatas[time] = {}
+            // }
+            // switch () {
+            //
+            // }
+            let jobs = tempPageResult[i]["jobs"]
+            if(this.pieDatas[LotID] === undefined){
+              this.pieDatas[LotID] = {}
+              this.pieDatas[LotID][time] = {}
+              this.pieDatas[LotID][time][jobs] = 1
             }
-            else {
-              this.pieDatas[time] = {}
-              this.pieDatas[time]["management"] = 0
+            else{
+              if(this.pieDatas[LotID][time] === undefined) {
+                this.pieDatas[LotID][time] = {}
+                this.pieDatas[LotID][time][jobs] = 1
+              }
+              else{
+                if(this.pieDatas[LotID][time][jobs] === undefined){
+                  this.pieDatas[LotID][time][jobs] = 1
+                }
+                else {
+                  this.pieDatas[LotID][time][jobs] += 1
+                }
+              }
             }
-            this.dates.push(new Date(this.tempPageResult[i].datetime1).getTime())
+            // if(this.pieDatas[time]){
+            //   this.pieDatas[time]["management"] += 1
+            // }
+            // else {
+            //   this.pieDatas[time] = {}
+            //   this.pieDatas[time]["management"] = 1
+            // }
+            this.dates.push(new Date(tempPageResult[i].datetime1).getTime())
           }
         })
-
+        alert(JSON.stringify(this.pieDatas))
       },
 
       draw:function () {
-        alert(JSON.stringify(this.pieDatas))
 
         function  getPieSeries(scatterData, chart) {
           return echarts.util.map(scatterData, function (item, index) {
@@ -179,9 +209,9 @@
 
       }
     },
-    async mounted() {
-      await this.getData()
-      this.draw()
+    mounted() {
+      this.getData()
+      // this.draw()
 
     }
   }

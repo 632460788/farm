@@ -7,7 +7,7 @@
     <MenuTree v-for="item in menu.children" :key="item.id" :menu="item"></MenuTree>
   </el-submenu>
   <el-menu-item v-else :index="'' + menu.id" @click="handleRoute(menu)">
-    <i :class="menu.icon"></i>
+    <i v-if="menu.parentId === 0" :class="menu.icon"></i>
     <span slot="title">{{menu.name}}</span>
   </el-menu-item>
 </template>
@@ -24,11 +24,13 @@
     },
     methods: {
       handleRoute (menu) {
+        console.log(menu)
         // 如果是嵌套页面，转换成iframe的path
         let path = getIFramePath(menu.url)
         if(!path) {
           path = menu.url
         }
+        console.log(path)
         // 通过菜单URL跳转至指定路由
         this.$router.push("/" + path)
       }

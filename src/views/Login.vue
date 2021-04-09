@@ -1,25 +1,14 @@
-
 <template>
   <div id="login">
-    <img src="../assets/login_background-3.png" alt="" class="background_img" style="display:block;margin: 0;">
+    <!--    <img src="../assets/login_background-3.png" alt="" class="background_img" style="display:block;margin: 0;">-->
     <div class="container">
       <!--        左侧图片-->
       <div class="pic">
-        <!--            这里将position改为absolute，img的位置为何会改变
-                        max-height用百分数做单位，组件的大小变化尚不清楚-->
         <img src="../assets/login_left.png" style="max-width: 87%;max-height: 62.5%;top: 23.8%;left: 11%;position: relative">
       </div>
       <!--        右侧组件-->
       <div class="login">
-        <!--            title文字-->
 
-        <!--            用户名和密码输入框-->
-        <!--        <div class="name">-->
-        <!--          <img src="img/user.png" style="height:35px;width: auto;top: 17.5px;left:5px ;position: absolute">-->
-        <!--        </div>-->
-        <!--        <div class="password">-->
-        <!--          <img src="img/password.png" style="height:35px;width: auto;top: 17.5px;left:5px ;position: absolute">-->
-        <!--        </div>-->
         <span class="title" >枳壳智慧种植管理系统</span>
 
         <div class="form" style="top: 40%;position: relative">
@@ -52,6 +41,8 @@
     </div>
   </div>
 </template>
+
+
 
 <script>
     import Cookies from "js-cookie";
@@ -151,8 +142,19 @@
     width: 1920px;
     height: 1080px;
     position: absolute;
+    background: url("../assets/login_background-3.png") no-repeat;
+    background-size: cover;
 
   }
+  /*.box{*/
+  /*  position: absolute;*/
+  /*  top: 50%;*/
+  /*  left: 50%;*/
+  /*  transform: translate(-50%, -50%);*/
+  /*  width: 400px;*/
+  /*  height: 40px;*/
+  /*  background: rgba(0,0,0,.8);*/
+  /*}*/
   .background_img{
     /*width: 1200px;*/
     /*height: 1200px;*/

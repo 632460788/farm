@@ -73,7 +73,8 @@
         langVisible: false,
         nowTime: '',
         isFullScreen: false,
-        fullSimg: fullscreenImg
+        fullSimg: fullscreenImg,
+        refreshTimes: 0
 
       }
     },
@@ -83,43 +84,50 @@
         this.$store.commit('setThemeColor', themeColor)
       },
       showFullScreen: function () {
-        if (this.isFullScreen === false){
-          this.isFullScreen = true
-          var el = document.documentElement;
-          var rfs = el.requestFullScreen || el.webkitRequestFullScreen || el.mozRequestFullScreen || el.msRequestFullscreen;
-          if(typeof rfs != "undefined" && rfs) {
-            rfs.call(el);
-          };
+        if(this.$showFullScreen.flag){
+          this.refreshTimes += 1
+          this.$router.push({
+            path:'/record/bigScreen',
+            query:{
+              refreshTimes: this.refreshTimes
+            }
+          })
+
         }
         else {
-          this.isFullScreen = false
-          if (document.exitFullscreen) {
-            document.exitFullscreen();
-          }
-          else if (document.mozCancelFullScreen) {
-            document.mozCancelFullScreen();
-          }
-          else if (document.webkitCancelFullScreen) {
-            document.webkitCancelFullScreen();
-          }
-          else if (document.msExitFullscreen) {
-            document.msExitFullscreen();
-          }
-          if(typeof cfs != "undefined" && cfs) {
-            cfs.call(el);
-          }
+          this.$showFullScreen.flag = true
+          let path = '/record/bigScreen'
+          this.$router.push(path);
         }
 
-        /*
-        var el = document.documentElement;
-        var rfs =  el.msRequestFullScreen;
-        if(typeof window.ActiveXObject != "undefined") {
-          //这的方法 模拟f11键，使浏览器全屏
-          var wscript = new ActiveXObject("WScript.Shell");
-          if(wscript != null) {
-            wscript.SendKeys("{F11}");
-          }
-        }*/
+        // if (this.isFullScreen === false){
+        //   this.isFullScreen = true
+        //   var el = document.documentElement;
+        //   var rfs = el.requestFullScreen || el.webkitRequestFullScreen || el.mozRequestFullScreen || el.msRequestFullscreen;
+        //   if(typeof rfs != "undefined" && rfs) {
+        //     rfs.call(el);
+        //   };
+        // }
+        // else {
+        //   this.isFullScreen = false
+        //   if (document.exitFullscreen) {
+        //     document.exitFullscreen();
+        //   }
+        //   else if (document.mozCancelFullScreen) {
+        //     document.mozCancelFullScreen();
+        //   }
+        //   else if (document.webkitCancelFullScreen) {
+        //     document.webkitCancelFullScreen();
+        //   }
+        //   else if (document.msExitFullscreen) {
+        //     document.msExitFullscreen();
+        //   }
+        //   if(typeof cfs != "undefined" && cfs) {
+        //     cfs.call(el);
+        //   }
+        // }
+
+
       }
     },
     mounted() {

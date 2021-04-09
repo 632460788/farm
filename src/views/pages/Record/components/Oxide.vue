@@ -30,7 +30,7 @@
       }
     },
     methods:{
-      drawLine:function () {
+      drawPie:function () {
         var dom = document.getElementById("Oxide"+this.OxideId);
         var myChart = echarts.init(dom);
         this.chart = myChart;
@@ -66,7 +66,7 @@
                   normal: {
                     show: true
                   }
-                }
+                },
 
               },
               {
@@ -91,7 +91,7 @@
       }
     },
     mounted() {
-      this.drawLine()
+      this.drawPie()
       window.addEventListener("resize", ()=>{
         this.$nextTick(
           ()=>{
@@ -99,6 +99,17 @@
           }
         )
       })
+    },
+    watch: {
+      'pieData': {
+        handler(newVal, oldVal) {
+          if (newVal !== oldVal) {
+            //
+            this.drawPie()
+          }
+
+        }
+      }
     }
 
   }
