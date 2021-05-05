@@ -240,6 +240,9 @@
           this.onResize()
         }
       )
+
+    },
+    created:function(){
       window.addEventListener("resize", ()=>{
         this.$nextTick(
           ()=>{

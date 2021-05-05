@@ -31,6 +31,15 @@ export const findSoilEntropyByLotID = params => {
   })
 }
 
+//按地块号查找土壤熵情信息
+export const findAllSoilEntropy = params => {
+  return axios({
+    url:'lot/findAllSoilEntropy',
+    type:'get',
+    params
+  })
+}
+
 // Todo 查找所有的地块记录
 export const findAllLotRecord = data =>{
   return axios({

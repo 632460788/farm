@@ -76,6 +76,10 @@
     mounted: function(){
 
       this.drawChart()
+
+    },
+    async created(){
+      await this.loadSensorLotData()
       window.addEventListener("resize", ()=>{
         this.$nextTick(
           ()=>{
@@ -83,9 +87,6 @@
           }
         )
       })
-    },
-    async created(){
-      await this.loadSensorLotData()
     },
 
     methods:{

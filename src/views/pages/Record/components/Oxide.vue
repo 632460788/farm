@@ -92,6 +92,9 @@
     },
     mounted() {
       this.drawPie()
+
+    },
+    created(){
       window.addEventListener("resize", ()=>{
         this.$nextTick(
           ()=>{

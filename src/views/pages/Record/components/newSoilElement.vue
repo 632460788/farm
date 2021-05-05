@@ -82,12 +82,13 @@
     },
     mounted() {
       this.drawElementBar()
-      window.addEventListener("resize", ()=>{
-        this.onResize()
-      })
+      this.onResize()
     },
     created(){
       // this.timer = setInterval(this.changeLotID,3000)
+      window.addEventListener("resize", ()=>{
+        this.onResize()
+      })
     },
     destroyed() {
       // clearInterval(this.timer);

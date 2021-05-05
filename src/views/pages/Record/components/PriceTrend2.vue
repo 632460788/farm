@@ -182,8 +182,15 @@
         this.chartData[j].id = pwd + j
       }
 
-      this.timer = setInterval(this.changePriceId, 15000)
+      this.timer = setInterval(this.changePriceId, 30000)
       this.timer2 = setInterval(this.longTimeRefresh, 1800000)
+      window.addEventListener("resize", ()=>{
+        this.$nextTick(
+          ()=>{
+            this.onResize()
+          }
+        )
+      })
 
 
     },
@@ -200,13 +207,7 @@
         }
       )
       this.onResize()
-      window.addEventListener("resize", ()=>{
-        this.$nextTick(
-          ()=>{
-            this.onResize()
-          }
-        )
-      })
+
     },
 
     methods:{

@@ -276,7 +276,7 @@
       this.$showFullScreen.flag = false
     },
     async created(){
-      this.forcast()
+      // this.forcast()
       this.refreshTimes = this.$route.query.refreshTimes
       if (this.$route.query.refreshTimes !== undefined) {
         this.showFullScreen()

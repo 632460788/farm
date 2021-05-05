@@ -71,12 +71,13 @@
     },
     mounted: function () {
       this.drawChart()
-      window.addEventListener("resize", ()=>{ this.chart.resize()})
     },
     created() {
       this.getData()
       this.getMonthRange()
       this.timer = setInterval(this.changeChartDataType,5000)
+      window.addEventListener("resize", ()=>{ this.chart.resize()})
+
     },
     destroyed() {
       clearInterval(this.timer);
